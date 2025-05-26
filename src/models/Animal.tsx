@@ -14,19 +14,19 @@ const Animal = sequelize.define(
             allowNull: false,
         },
         especie: {
-            type: DataTypes.STRING(50),
+            type: DataTypes.STRING(100),
             allowNull: false,
         },
         raca: {
-            type: DataTypes.STRING(50),
+            type: DataTypes.STRING(100),
             allowNull: false,
         },
         peso: {
-            type: DataTypes.FLOAT,
+            type: DataTypes.DECIMAL(6,2),
             allowNull: false,
         },
         sexo: {
-            type: DataTypes.STRING(1),
+            type: DataTypes.CHAR(1),
             allowNull: false,
         },
         data_nascimento: {
@@ -49,6 +49,11 @@ const Animal = sequelize.define(
                 key: 'id_tutor' // Chave primária da tabela referenciada
             }
         },
+    },
+    {
+        tableName: 'Animal',
+        timestamps: true,
+        underscored: true, // Usar snake_case para os nomes das colunas
     }
 );
 export default Animal;

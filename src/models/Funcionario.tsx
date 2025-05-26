@@ -26,6 +26,11 @@ const Funcionario = sequelize.define(
             allowNull: false,
             unique: true,
         },
+    },
+    {
+        tableName: 'Funcionario',
+        timestamps: true,
+        underscored: true, // Usar snake_case para os nomes das colunas
     }
 );
 export default Funcionario;

@@ -36,9 +36,10 @@ const Consulta = sequelize.define(
         status_consulta: {
             type: DataTypes.ENUM('Agendada', 'Realizada', 'Cancelada','Remarcada', 'Não Compareceu', 'Em Andamento'),
             allowNull: false,
+            defaultValue: 'Agendada'
         },
         preco: {
-            type: DataTypes.FLOAT,
+            type: DataTypes.DECIMAL(10, 2),
             allowNull: false
         }
     }

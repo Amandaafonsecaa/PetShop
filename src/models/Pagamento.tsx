@@ -18,7 +18,7 @@ const Pagamento = sequelize.define(
             }
         },
         valor: {
-            type: DataTypes.FLOAT,
+            type: DataTypes.DECIMAL(10, 2),
             allowNull: false,
         },
         data_pagamento: {
@@ -32,6 +32,7 @@ const Pagamento = sequelize.define(
         status_pagamento: {
             type: DataTypes.ENUM('Pendente', 'Pago', 'Cancelado', 'Reembolsado'),
             allowNull: false,
+            defaultValue: 'Pendente'
         },
     }
 )

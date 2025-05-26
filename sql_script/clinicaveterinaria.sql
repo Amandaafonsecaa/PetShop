@@ -27,8 +27,8 @@ CREATE TABLE Funcionario (
     id_funcionario INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     cargo VARCHAR(100) NOT NULL,
-    telefone VARCHAR(20),
-    email VARCHAR(255) UNIQUE
+    telefone VARCHAR(20) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE Consulta (
