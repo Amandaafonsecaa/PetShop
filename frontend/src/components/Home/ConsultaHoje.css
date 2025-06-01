@@ -1,0 +1,67 @@
+.consulta-card {
+  background-color: #f7f8fd; 
+  border-radius: 15px;       
+  color: #1e293b;           
+  padding: 1rem;             
+  margin-bottom: 1rem;       
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
+  display: flex;
+  align-items: center;      
+  justify-content: space-around; 
+  width: 100%; 
+  box-sizing: border-box; 
+  border-left: 5px solid transparent; 
+  transition: border-left-color 0.3s ease; 
+}
+
+#hora {
+  font-size: 1.4rem;
+  color: #675fe8;
+  font-weight: 600;
+}
+
+.consulta-card.status-agendada #status {
+  background-color: #007bff; /* Azul */
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 1rem;
+}
+
+/* Para status "Realizada" */
+.consulta-card.status-realizada #status {
+  background-color: #28a745; /* Verde */
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 1rem;
+}
+
+/* Para status "Cancelada" */
+.consulta-card.status-cancelada #status {
+  background-color: #dc3545; /* Vermelho */
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 1rem;
+}
+
+.consulta-card.status-remarcada #status {
+  background-color: #ffd900; /* Azul */
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 1rem;
+}
+
+
+.consulta-card.status-não-compareceu #status {
+  background-color: #dc3545; /* Verde */
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 1rem;
+}
+
+/* Para status "Cancelada" */
+.consulta-card.status-em-andamento #status {
+  background-color: #b835dc; /* Vermelho */
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 1rem;
+}

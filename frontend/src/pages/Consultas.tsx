@@ -2,32 +2,17 @@ import React, { useEffect, useState } from "react";
 
 import Navbar from "../components/Navbar";
 import NomeTela from "../components/ui/NomeTela";
-import InfoCard from "../components/Home/InfoCard";
+
 import type {
   Animal,
-  Tutor,
-  Pagamento,
   Funcionario,
   Consultas,
 } from "../types/interfaces";
-
-// Importando os ícones
-import iconePet from "../assets/icons/pet.png";
-import iconeTutor from "../assets/icons/tutor.png";
-import iconeFuncionarios from "../assets/icons/funcionarios.png";
-import iconePendente from "../assets/icons/pendente.png";
 import ConsultasHoje from "../components/Home/ConsultasHoje";
 
-export default function Home() {
+export default function Consultas(){
   //definindo variasveis de estado
   const [consultas, setConsultas] = useState<Consultas[]>([]);
-  const [totalAnimais, setTotalAnimais] = useState<number | string>("...");
-  const [totalTutores, setTotalTutores] = useState<number | string>("...");
-  const [totalFuncionarios, setTotalFuncionarios] = useState<number | string>(
-    "..."
-  );
-  const [contagemPagamentosPendentes, setContagemPagamentosPendentes] =
-    useState<number>(0);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,18 +32,7 @@ export default function Home() {
             `Falha ao buscar animais: ${animaisResponse.statusText}`
           );
         const animaisData: Animal[] = await animaisResponse.json();
-        setTotalAnimais(animaisData.length);
 
-        //fetch tutores
-        const tutoresResponse = await fetch(
-          "http://localhost:3001/api/tutores"
-        );
-        if (!tutoresResponse.ok)
-          throw new Error(
-            `Falha ao buscar tutores: ${tutoresResponse.statusText}`
-          );
-        const tutoresData: Tutor[] = await tutoresResponse.json();
-        setTotalTutores(tutoresData.length);
 
         //fetch funcionários
         const funcionariosResponse = await fetch(
@@ -70,22 +44,6 @@ export default function Home() {
           );
         const funcionarioData: Funcionario[] =
           await funcionariosResponse.json();
-        setTotalFuncionarios(funcionarioData.length);
-
-        //fetch pagamento
-        const pagamentoResponse = await fetch(
-          "http://localhost:3001/api/pagamentos"
-        );
-        if (!pagamentoResponse.ok)
-          throw new Error(
-            `Falha ao buscar pagamento: ${pagamentoResponse.statusText}`
-          );
-        const pagamentoData: Pagamento[] = await pagamentoResponse.json();
-
-        const pagamentosPendentesArray = pagamentoData.filter(
-          (p) => p.status_pagamento.toLowerCase() === "pendente"
-        );
-        setContagemPagamentosPendentes(pagamentosPendentesArray.length);
 
         //fetch consultas
         const consultasResponse = await fetch(
@@ -153,83 +111,34 @@ export default function Home() {
     };
 
     fetchDashboardData();
-  }, []); // Added dependency array
+  }, []);
 
-  const dashboardCardContainerStyle: React.CSSProperties = {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "20px", // Espaçamento entre os cards
-    justifyContent: "center", // Ou 'flex-start', 'space-around', etc.
-    padding: "20px 0", // Adiciona um pouco de preenchimento vertical
-  };
+  if(loading){
+    return(
+        <div className="consultas">
 
-  if (loading) {
-    return (
-      <div className="home">
-        <div className="navbar">
-          <Navbar />
         </div>
-        <div className="nome-tela">
-          <NomeTela message="Dashboard" />
-        </div>
-        <p style={{ textAlign: "center", fontSize: "1.2em" }}>
-          Carregando dados...
-        </p>
-      </div>
     );
   }
 
-  if (error) {
-    return (
-      <div className="home">
-        <div className="navbar">
-          <Navbar />
+  if(error){
+    return(
+        <div className="consultas">
+            
         </div>
-        <div className="nome-tela">
-          <NomeTela message="Dashboard" />
-        </div>
-        <p style={{ textAlign: "center", fontSize: "1.2em" }}>
-          Erro ao carregar dados:
-        </p>
-      </div>
     );
   }
 
-  return (
-    <div className="home">
-      <div className="navbar">
-        <Navbar />
-      </div>
-      <div className="nome-tela">
-        <NomeTela message="DashBoard" />
-      </div>
-      <div className="dashboard-card" style={dashboardCardContainerStyle}>
-        <InfoCard
-          titulo="Total de Animais"
-          valor={totalAnimais}
-          icone={iconePet}
-        />
-        <InfoCard
-          titulo="Total de Tutores"
-          valor={totalTutores}
-          icone={iconeTutor}
-        />
-        <InfoCard
-          titulo="Total de Funcionários"
-          valor={totalFuncionarios}
-          icone={iconeFuncionarios}
-        />
-        <InfoCard
-          titulo="Pagamentos Pendentes"
-          valor={contagemPagamentosPendentes}
-          icone={iconePendente}
-        />
-      </div>
-      <div
-        className="consultas-hoje"
-        style={{ marginTop: "30px" }}
-      >
-        {" "}
+  return(
+    <div className="consultas">
+        <div className="navbar">
+            <Navbar />
+        </div>
+        <div className="nome-tela">
+            <NomeTela message="Consultas" />
+        </div>
+        <div className="consultas-hoje">
+            {" "}
         <NomeTela message="Consultas de Hoje" />
         {loading && <p>Carregando consultas...</p>}{" "}
         
@@ -265,7 +174,7 @@ export default function Home() {
                 Nenhuma consulta agendada para hoje.
               </p>
             )}
-      </div>
+        </div>
     </div>
   );
 }

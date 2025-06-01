@@ -30,7 +30,12 @@ export interface Pagamento {
   id_consulta: number;
   valor: number;
   data_pagamento: Date;
-  metodo: "Cartão de Crédito" | "Cartão de Débito" | "Dinheiro" | "Pix" | "Transferência";
+  metodo:
+    | "Cartão de Crédito"
+    | "Cartão de Débito"
+    | "Dinheiro"
+    | "Pix"
+    | "Transferência";
   status_pagamento: "Pendente" | "Pago" | "Cancelado" | "Reembolsado";
   createdAt?: Date;
   updatedAt?: Date;
@@ -45,4 +50,18 @@ export interface Funcionario {
   email: string;
   createdAt?: Date;
   updatedAt?: Date;
-} 
+}
+
+export interface Consultas {
+  id_consulta?: string;
+  id_animal: string;
+  id_tutor?: string;
+  status_consulta: string;
+  data_hora: string | number;
+  preco?: string | number;
+  id_funcionario: string;
+
+  nomeAnimal?: string; // Nome do animal
+  nomeFuncionario?: string; // Nome do funcionário
+  diagnostico?: string | null;
+}
