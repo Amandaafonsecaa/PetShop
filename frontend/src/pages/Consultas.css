@@ -1,0 +1,30 @@
+.consultas {
+  width: 1090px;
+  text-align: center;
+}
+
+.consultas-hoje {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.consultas-hoje .nome-tela {
+  margin-bottom: 1rem;
+}
+
+/* Estilo para o container de cards de consultas */
+.consultas-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.funcoes{
+  display: flex;
+  justify-content: space-around;
+  padding: 3rem 0;
+}

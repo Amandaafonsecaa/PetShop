@@ -1,21 +1,29 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 #root {
   min-height: 100vh;
-  background-color: #F3F4F6;
 }
 
 .app {
-  max-width: 1280px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 2rem;
+  width: 100%;
 }
 
 .content {
   margin-top: 2rem;
+  width: 100%;
+}
+
+/* Estilos globais compartilhados */
+.nome-tela {
+  margin-bottom: 2rem;
+}
+
+/* Classes base para todas as páginas */
+.home,
+.consultas,
+.animais,
+.funcionarios,
+.tutores {
   width: 100%;
 }

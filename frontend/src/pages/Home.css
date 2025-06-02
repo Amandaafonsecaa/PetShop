@@ -1,5 +1,5 @@
 .home {
-  width: 100%;
+  width: 1090px;
 }
 
 .dashboard-card {
@@ -10,7 +10,19 @@
   padding: 20px 0;
 }
 
-.loading-text, .error-text {
+.consultas-hoje {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.consultas-hoje .nome-tela {
+  margin-bottom: 1rem;
+}
+
+.loading-text,
+.error-text {
   text-align: center;
   font-size: 1.2em;
   margin-top: 2rem;

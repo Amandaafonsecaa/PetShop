@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 
+import BtnCrud from "../components/ui/BtnCrud";
 import Navbar from "../components/Navbar";
 import NomeTela from "../components/ui/NomeTela";
-
-import type {
-  Animal,
-  Funcionario,
-  Consultas,
-} from "../types/interfaces";
 import ConsultasHoje from "../components/Home/ConsultasHoje";
 
-export default function Consultas(){
+import adicionarIcon from "../assets/icons/adicionar.png";
+import apagarIcon from "../assets/icons/apagar.png";
+import editarIcon from "../assets/icons/editar.png";
+import listarIcon from "../assets/icons/ver.png";
+
+import "./Consultas.css";
+
+import type { Animal, Funcionario, Consultas } from "../types/interfaces";
+
+export default function Consultas() {
   //definindo variasveis de estado
   const [consultas, setConsultas] = useState<Consultas[]>([]);
 
@@ -32,7 +36,6 @@ export default function Consultas(){
             `Falha ao buscar animais: ${animaisResponse.statusText}`
           );
         const animaisData: Animal[] = await animaisResponse.json();
-
 
         //fetch funcionários
         const funcionariosResponse = await fetch(
@@ -113,68 +116,85 @@ export default function Consultas(){
     fetchDashboardData();
   }, []);
 
-  if(loading){
-    return(
-        <div className="consultas">
-
-        </div>
-    );
-  }
-
-  if(error){
-    return(
-        <div className="consultas">
-            
-        </div>
-    );
-  }
-
-  return(
-    <div className="consultas">
-        <div className="navbar">
-            <Navbar />
-        </div>
+  if (loading) {
+    return (
+      <div className="consultas">
         <div className="nome-tela">
-            <NomeTela message="Consultas" />
+          <NomeTela message="Consultas" />
         </div>
-        <div className="consultas-hoje">
-            {" "}
+        <p>Carregando consultas...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="consultas">
+        <div className="nome-tela">
+          <NomeTela message="Consultas" />
+        </div>
+        <p style={{ color: "red" }}>Erro: {error}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="consultas">
+      <div className="navbar">
+        <Navbar />
+      </div>
+
+      <div className="consultas-hoje">
         <NomeTela message="Consultas de Hoje" />
-        {loading && <p>Carregando consultas...</p>}{" "}
-        
-        {!loading && error && (
-          <p style={{ color: "red", textAlign: "center" }}>
-            Erro ao carregar consultas: {error}
+        {consultas.length > 0 ? (
+          consultas.map((consultaItem) => (
+            <ConsultasHoje
+              key={
+                consultaItem.id_consulta ||
+                `${consultaItem.id_animal}-${consultaItem.data_hora}`
+              }
+              id_animal={consultaItem.id_animal}
+              nomeAnimal={consultaItem.nomeAnimal}
+              id_funcionario={consultaItem.id_funcionario}
+              nomeFuncionario={consultaItem.nomeFuncionario}
+              status_consulta={consultaItem.status_consulta}
+              data_hora={consultaItem.data_hora}
+              preco={consultaItem.preco}
+              diagnostico={consultaItem.diagnostico}
+            />
+          ))
+        ) : (
+          <p style={{ textAlign: "center" }}>
+            Nenhuma consulta agendada para hoje.
           </p>
-        )}{" "}
-        {!loading && !error && consultas.length > 0
-          ? consultas.map((consultaItem) => (
-              <ConsultasHoje
-                
-                key={
-                  consultaItem.id_consulta ||
-                  `${consultaItem.id_animal}-${consultaItem.data_hora}`
-                }
-                
-                id_animal={consultaItem.id_animal}
-                nomeAnimal={consultaItem.nomeAnimal}
-                id_funcionario={consultaItem.id_funcionario}
-                nomeFuncionario={consultaItem.nomeFuncionario}
-                status_consulta={consultaItem.status_consulta}
-                data_hora={consultaItem.data_hora}
-                preco={consultaItem.preco}
-                diagnostico={consultaItem.diagnostico}
-                
-              />
-            ))
-          : // Só mostra "Nenhuma consulta" se não estiver carregando e não houver erro, e o array estiver vazio.
-            !loading &&
-            !error && (
-              <p style={{ textAlign: "center" }}>
-                Nenhuma consulta agendada para hoje.
-              </p>
-            )}
-        </div>
+        )}
+      </div>
+      <div className="funcoes">
+        <BtnCrud
+          imageUrl={editarIcon}
+          imageAlt="editar"
+          title="Editar"
+          description="Editar uma consulta já existente"
+        />
+        <BtnCrud
+          imageUrl={apagarIcon}
+          imageAlt="Apagar"
+          title="Apagar"
+          description="Apagar uma consulta existente"
+        />
+        <BtnCrud
+          imageUrl={listarIcon}
+          imageAlt="listar"
+          title="Listar"
+          description="Listar consultas"
+        />
+        <BtnCrud
+          imageUrl={adicionarIcon}
+          imageAlt="Adicionar"
+          title="Adicionar"
+          description="Adicionar uma consulta"
+        />
+      </div>
     </div>
   );
 }

@@ -1,9 +1,10 @@
 .consulta-card {
   background-color: #f7f8fd; 
   border-radius: 15px;       
-  color: #1e293b;           
-  padding: 1rem;             
-  margin-bottom: 1rem;       
+  color: #1e293b;    
+  height: 4rem;       
+  padding: 1.3rem;             
+  margin-bottom: 0rem;       
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
   display: flex;
   align-items: center;      
