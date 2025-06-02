@@ -29,7 +29,10 @@ export default function Animais() {
 
   // Estados para a funcionalidade "Ver mais / Ver menos"
   const [mostrarTodos, setMostrarTodos] = useState<boolean>(false);
-  const LIMITE_INICIAL_ANIMAIS = 7;
+  const LIMITE_INICIAL_ANIMAIS = 3;
+
+  // Estado para controlar o animal selecionado
+  const [animalSelecionado, setAnimalSelecionado] = useState<Animal | null>(null);
 
   useEffect(() => {
     const fetchDadosIniciais = async () => {
@@ -135,6 +138,41 @@ export default function Animais() {
     ? animaisFiltrados
     : animaisFiltrados.slice(0, LIMITE_INICIAL_ANIMAIS);
 
+  // Função para lidar com a seleção de um animal
+  const handleSelecionarAnimal = (animal: Animal) => {
+    if (animalSelecionado?.id_animal === animal.id_animal) {
+      setAnimalSelecionado(null); // Desseleciona se clicar no mesmo animal
+    } else {
+      setAnimalSelecionado(animal); // Seleciona o novo animal
+    }
+  };
+
+  // Função para lidar com ações CRUD
+  const handleAcaoCrud = (acao: string) => {
+    switch (acao) {
+      case 'adicionar':
+        console.log('Adicionar novo animal');
+        break;
+      case 'editar':
+        if (animalSelecionado) {
+          console.log('Editar animal:', animalSelecionado);
+        }
+        break;
+      case 'apagar':
+        if (animalSelecionado) {
+          console.log('Apagar animal:', animalSelecionado);
+        }
+        break;
+      case 'listar':
+        if (animalSelecionado) {
+          console.log('Ver detalhes do animal:', animalSelecionado);
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
   // --- Renderização de Loading e Error ---
   if (loading) {
     return (
@@ -180,21 +218,20 @@ export default function Animais() {
         />
       </div>
 
+      {/* Status de seleção */}
+      {animalSelecionado && (
+        <div className="status-selecao">
+          Animal selecionado: {animalSelecionado.nomeAnimal} (ID: {animalSelecionado.id_animal})
+        </div>
+      )}
     
-      <div
-        className="funcoes-crud-animais"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "10px",
-          padding: "20px",
-        }}
-      >
+      <div className="funcoes-crud-animais">
         <BtnCrud
           imageUrl={adicionarIcon}
           imageAlt="Adicionar Animal"
           title="Adicionar"
           description="Cadastrar novo animal"
+          onClick={() => handleAcaoCrud('adicionar')}
         />
 
         <BtnCrud
@@ -202,33 +239,40 @@ export default function Animais() {
           imageAlt="Apagar Animal"
           title="Apagar"
           description="Apagar um animal"
-        /><BtnCrud
+          onClick={() => handleAcaoCrud('apagar')}
+          disabled={!animalSelecionado}
+        />
+        <BtnCrud
           imageUrl={editarIcon}
           imageAlt="Editar Animal"
           title="Editar"
           description="Editar um animal"
+          onClick={() => handleAcaoCrud('editar')}
+          disabled={!animalSelecionado}
         />
         <BtnCrud
           imageUrl={listarIcon}
           imageAlt="listar Animal"
           title="Listar"
           description="Listar animais"
+          onClick={() => handleAcaoCrud('listar')}
+          disabled={!animalSelecionado}
         />
-       
       </div>
 
-      
       <div className="lista-animais-container">
         {animaisParaExibir.length > 0 ? (
           animaisParaExibir.map((animal) => (
-            <ListarAnimaisCard
+            <div
               key={animal.id_animal}
-              {...animal} // Passa todas as propriedades do objeto animal enriquecido
-            />
+              onClick={() => handleSelecionarAnimal(animal)}
+              className={`animal-card ${animalSelecionado?.id_animal === animal.id_animal ? 'selecionado' : ''}`}
+            >
+              <ListarAnimaisCard {...animal} />
+            </div>
           ))
         ) : (
           <p style={{ textAlign: "center" }}>
-            
             {termoDeBusca.trim() && listaCompletaAnimais.length > 0
               ? "Nenhum animal encontrado com este nome ou ID."
               : "Nenhum animal cadastrado."}
@@ -236,16 +280,8 @@ export default function Animais() {
         )}
 
         {/* Botões "Ver mais" / "Ver menos" */}
-        {/* Só mostra os botões se a lista filtrada completa for maior que o limite */}
         {animaisFiltrados.length > LIMITE_INICIAL_ANIMAIS && (
-          <div
-            className="botoes-paginacao-animais"
-            style={{
-              textAlign: "center",
-              marginTop: "20px",
-              marginBottom: "20px",
-            }}
-          >
+          <div className="botoes-paginacao-animais">
             {!mostrarTodos ? (
               <button
                 onClick={() => setMostrarTodos(true)}

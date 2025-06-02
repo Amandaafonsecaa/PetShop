@@ -1,35 +1,9 @@
-.consultas {
+.funcionarios {
   width: 1090px;
   text-align: center;
 }
 
-.consultas-hoje {
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  width: 100%;
-}
-
-.consultas-hoje .nome-tela {
-  margin-bottom: 1rem;
-}
-
-/* Estilo para o container de cards de consultas */
-.consultas-lista {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 1.5rem;
-  width: 100%;
-}
-
-.funcoes{
-  display: flex;
-  justify-content: space-around;
-  padding: 3rem 0;
-}
-
-.input-pesquisa-consultas {
+.input-pesquisa-funcionarios {
   background-color: #f7f8fd;
   border-style: none;
   padding-left: 1rem;
@@ -39,7 +13,7 @@
   width: 300px;
 }
 
-.lista-consultas {
+.lista-funcionarios {
   background-color: #f7f8fd;
   border-radius: 15px;
   color: #1e293b;
@@ -54,7 +28,7 @@
   box-sizing: border-box;
 }
 
-.consulta-card {
+.funcionario-card {
   width: 100%;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -62,12 +36,12 @@
   border-radius: 8px;
 }
 
-.consulta-card:hover {
+.funcionario-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.consulta-card.selecionado {
+.funcionario-card.selecionado {
   border-color: #4a90e2;
   background-color: #f0f7ff;
 }

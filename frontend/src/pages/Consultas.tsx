@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 
 import BtnCrud from "../components/ui/BtnCrud";
 import Navbar from "../components/Navbar";
@@ -9,17 +9,59 @@ import adicionarIcon from "../assets/icons/adicionar.png";
 import apagarIcon from "../assets/icons/apagar.png";
 import editarIcon from "../assets/icons/editar.png";
 import listarIcon from "../assets/icons/ver.png";
+import lupaIcon from "../assets/icons/lupa.png";
 
 import "./Consultas.css";
 
-import type { Animal, Funcionario, Consultas } from "../types/interfaces";
+import { type Animal, type Funcionario, type Consultas } from "../types/interfaces";
 
 export default function Consultas() {
   //definindo variasveis de estado
   const [consultas, setConsultas] = useState<Consultas[]>([]);
-
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [listaCompletaConsultas, setListaCompletaConsultas] = useState<Consultas[]>([]);
+  const [termoDeBusca, setTermoDeBusca] = useState<string>("");
+  const [mostrarTodos, setMostrarTodos] = useState<boolean>(false);
+  const LIMITE_INICIAL_CONSULTAS = 7;
+
+  // Estado para controlar a consulta selecionada
+  const [consultaSelecionada, setConsultaSelecionada] = useState<Consultas | null>(null);
+
+  // Função para lidar com a seleção de uma consulta
+  const handleSelecionarConsulta = (consulta: Consultas) => {
+    if (consultaSelecionada?.id_consulta === consulta.id_consulta) {
+      setConsultaSelecionada(null); // Desseleciona se clicar na mesma consulta
+    } else {
+      setConsultaSelecionada(consulta); // Seleciona a nova consulta
+    }
+  };
+
+  // Função para lidar com ações CRUD
+  const handleAcaoCrud = (acao: string) => {
+    switch (acao) {
+      case 'adicionar':
+        console.log('Adicionar nova consulta');
+        break;
+      case 'editar':
+        if (consultaSelecionada) {
+          console.log('Editar consulta:', consultaSelecionada);
+        }
+        break;
+      case 'apagar':
+        if (consultaSelecionada) {
+          console.log('Apagar consulta:', consultaSelecionada);
+        }
+        break;
+      case 'listar':
+        if (consultaSelecionada) {
+          console.log('Ver detalhes da consulta:', consultaSelecionada);
+        }
+        break;
+      default:
+        break;
+    }
+  };
 
   //conectar ao banco
   useEffect(() => {
@@ -71,9 +113,8 @@ export default function Consultas() {
         });
 
         // Criar mapas para busca rápida de nomes (MUITO mais eficiente que .find() em loops)
-        // Adapte 'id_animal' e 'nome' para os nomes corretos dos campos nas suas interfaces Animal e Funcionario
         const mapaAnimais = new Map(
-          animaisData.map((animal) => [animal.id_animal, animal.nome])
+          animaisData.map((animal) => [animal.id_animal, animal.nomeAnimal])
         );
         const mapaFuncionarios = new Map(
           funcionarioData.map((func) => [func.id_funcionario, func.nome])
@@ -116,6 +157,23 @@ export default function Consultas() {
     fetchDashboardData();
   }, []);
 
+  const consultasFiltradas = useMemo(() => {
+    if(!termoDeBusca.trim()){
+        return listaCompletaConsultas;
+    }
+    const termoLower = termoDeBusca.toLowerCase().trim();
+    return listaCompletaConsultas.filter((consulta)=>{
+        const nomeFuncionarioLower = consulta.nomeFuncionario?.toLowerCase() || "";
+        const idFuncionarioString = consulta.id_funcionario.toString();
+        return(
+            nomeFuncionarioLower.includes(termoLower) ||
+            idFuncionarioString.includes(termoLower)
+            );
+    });
+  }, [listaCompletaConsultas, termoDeBusca]);
+
+  const consultasParaExibir = mostrarTodos ? consultasFiltradas : consultasFiltradas.slice(0, LIMITE_INICIAL_CONSULTAS);
+
   if (loading) {
     return (
       <div className="consultas">
@@ -143,57 +201,111 @@ export default function Consultas() {
       <div className="navbar">
         <Navbar />
       </div>
-
       <div className="consultas-hoje">
         <NomeTela message="Consultas de Hoje" />
-        {consultas.length > 0 ? (
-          consultas.map((consultaItem) => (
-            <ConsultasHoje
-              key={
-                consultaItem.id_consulta ||
-                `${consultaItem.id_animal}-${consultaItem.data_hora}`
-              }
-              id_animal={consultaItem.id_animal}
-              nomeAnimal={consultaItem.nomeAnimal}
-              id_funcionario={consultaItem.id_funcionario}
-              nomeFuncionario={consultaItem.nomeFuncionario}
-              status_consulta={consultaItem.status_consulta}
-              data_hora={consultaItem.data_hora}
-              preco={consultaItem.preco}
-              diagnostico={consultaItem.diagnostico}
-            />
-          ))
-        ) : (
-          <p style={{ textAlign: "center" }}>
-            Nenhuma consulta agendada para hoje.
-          </p>
-        )}
       </div>
-      <div className="funcoes">
+
+      <div className="barra-pesquisa-container">
+        <img src={lupaIcon} alt="Lupa" className="icone-lupa" />
+        <input
+          type="text"
+          placeholder="Pesquisar por ID ou Nome do funcionário..."
+          className="input-pesquisa-consultas"
+          value={termoDeBusca}
+          onChange={(e) => {
+            setTermoDeBusca(e.target.value);
+            setMostrarTodos(false); 
+          }}
+        />
+      </div>
+
+      {/* Status de seleção */}
+      {consultaSelecionada && (
+        <div className="status-selecao">
+          Consulta selecionada: Animal {consultaSelecionada.nomeAnimal} com Dr(a). {consultaSelecionada.nomeFuncionario}
+        </div>
+      )}
+
+      <div className="funcoes-crud">
+        <BtnCrud
+          imageUrl={adicionarIcon}
+          imageAlt="Adicionar"
+          title="Adicionar"
+          description="Adicionar uma consulta"
+          onClick={() => handleAcaoCrud('adicionar')}
+        />
         <BtnCrud
           imageUrl={editarIcon}
-          imageAlt="editar"
+          imageAlt="Editar"
           title="Editar"
           description="Editar uma consulta já existente"
+          onClick={() => handleAcaoCrud('editar')}
+          disabled={!consultaSelecionada}
         />
         <BtnCrud
           imageUrl={apagarIcon}
           imageAlt="Apagar"
           title="Apagar"
           description="Apagar uma consulta existente"
+          onClick={() => handleAcaoCrud('apagar')}
+          disabled={!consultaSelecionada}
         />
         <BtnCrud
           imageUrl={listarIcon}
           imageAlt="listar"
           title="Listar"
           description="Listar consultas"
+          onClick={() => handleAcaoCrud('listar')}
+          disabled={!consultaSelecionada}
         />
-        <BtnCrud
-          imageUrl={adicionarIcon}
-          imageAlt="Adicionar"
-          title="Adicionar"
-          description="Adicionar uma consulta"
-        />
+      </div>
+
+      <div className="lista-consultas">
+        {consultas.length > 0 ? (
+          consultas.map((consultaItem) => (
+            <div
+              key={consultaItem.id_consulta || `${consultaItem.id_animal}-${consultaItem.data_hora}`}
+              onClick={() => handleSelecionarConsulta(consultaItem)}
+              className={`consulta-card ${consultaSelecionada?.id_consulta === consultaItem.id_consulta ? 'selecionado' : ''}`}
+            >
+              <ConsultasHoje
+                id_animal={consultaItem.id_animal}
+                nomeAnimal={consultaItem.nomeAnimal}
+                id_funcionario={consultaItem.id_funcionario}
+                nomeFuncionario={consultaItem.nomeFuncionario}
+                status_consulta={consultaItem.status_consulta}
+                data_hora={consultaItem.data_hora}
+                preco={consultaItem.preco}
+                diagnostico={consultaItem.diagnostico}
+              />
+            </div>
+          ))
+        ) : (
+          <p style={{ textAlign: "center" }}>
+            Nenhuma consulta agendada para hoje.
+          </p>
+        )}
+
+        {/* Botões "Ver mais" / "Ver menos" */}
+        {consultasFiltradas.length > LIMITE_INICIAL_CONSULTAS && (
+          <div className="botoes-paginacao">
+            {!mostrarTodos ? (
+              <button
+                onClick={() => setMostrarTodos(true)}
+                className="btn-ver-mais"
+              >
+                Ver mais ({consultasFiltradas.length - LIMITE_INICIAL_CONSULTAS} restantes)
+              </button>
+            ) : (
+              <button
+                onClick={() => setMostrarTodos(false)}
+                className="btn-ver-menos"
+              >
+                Ver menos
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
