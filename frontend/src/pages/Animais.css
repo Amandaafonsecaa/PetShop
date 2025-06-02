@@ -1,4 +1,43 @@
-.animais {
-  width: 1090px;
+.animais-pagina{
+   width: 1090px;
   text-align: center;
 }
+
+.input-pesquisa-animais{
+  background-color: #f7f8fd;
+  border-style: none;
+  padding-left: 1rem;
+  align-items: center;
+  justify-content: center;
+  color: #1e293b;
+}
+
+.lista-animais-container{
+  background-color: #f7f8fd; 
+  border-radius: 15px;       
+  color: #1e293b;    
+  align-items: center;
+  padding: 1.3rem;             
+  margin-bottom: 0rem;       
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
+  display: flex;
+  flex-direction: column;
+  align-items: center;      
+  text-align: center;
+  justify-content: space-around; 
+  width: 100%; 
+  box-sizing: border-box; 
+  border-left: 5px solid transparent; 
+  transition: border-left-color 0.3s ease; 
+}
+
+.barra-pesquisa-container img{
+  width: 1rem;
+}
+
+.barra-pesquisa-container{
+  background-color: #f7f8fd;
+  padding: 0.7rem;
+  border-radius: 10px;
+}
+

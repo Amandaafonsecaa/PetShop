@@ -66,16 +66,7 @@ export default function Navbar() {
               Funcionários
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/tutores"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-            >
-              Tutores
-            </NavLink>
-          </li>
+
         </ul>
       </div>
     </div>

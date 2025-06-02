@@ -1,17 +1,19 @@
 // Interfaces relacionadas a Animais
 export interface Animal {
   id_animal: number;
-  nome: string;
-  especie: string;
+  especie?: string;
   raca: string;
-  peso: number;
-  sexo: string;
-  data_nascimento: Date;
-  observacoes_medicas: string | null;
+  peso?: number;
+  sexo?: string;
+  data_nascimento?: Date;
+  observacoes_medicas?: string | null;
   status_animal: "Ativo" | "Inativo" | "Falecido";
   id_tutor: number;
   createdAt?: Date;
   updatedAt?: Date;
+
+  nomeAnimal?: string;
+  nomeTutor?: string;
 }
 
 // Interfaces relacionadas a Tutores

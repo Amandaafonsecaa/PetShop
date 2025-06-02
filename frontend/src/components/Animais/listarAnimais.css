@@ -1,0 +1,26 @@
+.listar-animal {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.listar-animal.status-ativo #status {
+  background-color: #007bff; /* Azul */
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 1rem;
+}
+
+.listar-animal.status-inativo #status {
+  background-color: #252628; /* Azul */
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 1rem;
+}
+
+.listar-animal.status-falecido #status {
+  background-color: #00070f; /* Azul */
+  color: white;
+  padding: 0.3rem 1rem;
+  border-radius: 1rem;
+}
