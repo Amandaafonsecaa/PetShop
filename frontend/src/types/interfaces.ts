@@ -55,15 +55,15 @@ export interface Funcionario {
 }
 
 export interface Consultas {
-  id_consulta?: string;
-  id_animal: string;
-  id_tutor?: string;
-  status_consulta: string;
-  data_hora: string | number;
-  preco?: string | number;
-  id_funcionario: string;
-
-  nomeAnimal?: string; // Nome do animal
-  nomeFuncionario?: string; // Nome do funcionário
-  diagnostico?: string | null;
+  id_consulta: number;
+  id_animal: number;
+  id_funcionario: number;
+  data_hora: string;
+  diagnostico: string | null;
+  status_consulta: 'Agendada' | 'Realizada' | 'Cancelada' | 'Remarcada' | 'Não Compareceu' | 'Em Andamento';
+  preco: number;
+  nomeAnimal?: string;
+  nomeFuncionario?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

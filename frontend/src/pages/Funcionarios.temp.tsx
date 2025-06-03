@@ -199,17 +199,11 @@ export default function Funcionarios() {
         break;
       case "editar":
         if (funcionarioSelecionado) {
-          // Garantir que todos os campos tenham valores padrão apropriados
-          const nome = funcionarioSelecionado.nome;
-          const cargo = funcionarioSelecionado.cargo;
-          const telefone = funcionarioSelecionado.telefone;
-          const email = funcionarioSelecionado.email;
-
           setFormData({
-            nome,
-            cargo,
-            telefone,
-            email
+            nome: funcionarioSelecionado.nome,
+            cargo: funcionarioSelecionado.cargo,
+            telefone: funcionarioSelecionado.telefone,
+            email: funcionarioSelecionado.email,
           });
           setModalEditar(true);
         }
@@ -363,39 +357,35 @@ export default function Funcionarios() {
         title="Adicionar Funcionário"
       >
         <div className="form-group">
-          <label className="required">Nome:</label>
+          <label>Nome:</label>
           <input
             type="text"
             value={formData.nome}
             onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-            placeholder="Nome completo"
           />
         </div>
         <div className="form-group">
-          <label className="required">Cargo:</label>
+          <label>Cargo:</label>
           <input
             type="text"
             value={formData.cargo}
             onChange={(e) => setFormData({ ...formData, cargo: e.target.value })}
-            placeholder="Ex: Veterinário, Auxiliar, Recepcionista..."
           />
         </div>
         <div className="form-group">
-          <label className="required">Telefone:</label>
+          <label>Telefone:</label>
           <input
-            type="tel"
+            type="text"
             value={formData.telefone}
             onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
-            placeholder="(00) 00000-0000"
           />
         </div>
         <div className="form-group">
-          <label className="required">Email:</label>
+          <label>Email:</label>
           <input
             type="email"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            placeholder="email@exemplo.com"
           />
         </div>
         <div className="modal-actions">
@@ -415,39 +405,35 @@ export default function Funcionarios() {
         title="Editar Funcionário"
       >
         <div className="form-group">
-          <label className="required">Nome:</label>
+          <label>Nome:</label>
           <input
             type="text"
             value={formData.nome}
             onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-            placeholder="Nome completo"
           />
         </div>
         <div className="form-group">
-          <label className="required">Cargo:</label>
+          <label>Cargo:</label>
           <input
             type="text"
             value={formData.cargo}
             onChange={(e) => setFormData({ ...formData, cargo: e.target.value })}
-            placeholder="Ex: Veterinário, Auxiliar, Recepcionista..."
           />
         </div>
         <div className="form-group">
-          <label className="required">Telefone:</label>
+          <label>Telefone:</label>
           <input
-            type="tel"
+            type="text"
             value={formData.telefone}
             onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
-            placeholder="(00) 00000-0000"
           />
         </div>
         <div className="form-group">
-          <label className="required">Email:</label>
+          <label>Email:</label>
           <input
             type="email"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            placeholder="email@exemplo.com"
           />
         </div>
         <div className="modal-actions">
