@@ -1,0 +1,22 @@
+.home-container {
+    display: flex;
+  }
+  
+  .main-content {
+    margin-left: 20rem;
+    padding: 20px;
+    width: calc(100% - 20rem);
+  }
+  
+  .dashboard-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px 0;
+  }
+  
+  .loading-text, .error-text {
+    text-align: center;
+    font-size: 1.2em;
+  }
