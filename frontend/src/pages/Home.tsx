@@ -119,26 +119,26 @@ export default function Home() {
         );
 
         const consultasEnriquecidas: Consultas[] = consultasFiltradas.map(
-          (consultaOriginal: any) => {
-            return {
-              // Espalhe as propriedades originais da consulta
-              ...consultaOriginal,
-              // Garanta que os tipos dos IDs estejam corretos se necessário
-              id_animal: Number(consultaOriginal.id_animal),
-              id_funcionario: Number(consultaOriginal.id_funcionario),
-              preco: Number(consultaOriginal.preco),
-              data_hora: consultaOriginal.data_hora, // Já é string ou pode ser new Date(consultaOriginal.data_hora)
-              // Adicione os nomes encontrados
-              nomeAnimal:
-                mapaAnimais.get(Number(consultaOriginal.id_animal)) ||
-                "Animal não encontrado",
-              nomeFuncionario:
-                mapaFuncionarios.get(Number(consultaOriginal.id_funcionario)) ||
-                "Funcionário não encontrado",
-              // Se você tiver um id_consulta vindo do backend, inclua aqui também
-              // id_consulta: consultaOriginal.id_consulta // Exemplo
-            };
-          }
+          (consultaOriginal) => ({
+            ...consultaOriginal,
+            id_animal: Number(consultaOriginal.id_animal),
+            id_funcionario: Number(consultaOriginal.id_funcionario),
+            preco: Number(consultaOriginal.preco),
+            data_hora: consultaOriginal.data_hora,
+            nomeAnimal:
+              consultaOriginal.animal?.nome ||
+              mapaAnimais.get(Number(consultaOriginal.id_animal)) ||
+              "Animal não encontrado",
+            nomeFuncionario:
+              consultaOriginal.funcionario?.nome ||
+              mapaFuncionarios.get(Number(consultaOriginal.id_funcionario)) ||
+              "Funcionário não encontrado",
+            id_consulta: Number(consultaOriginal.id_consulta),
+            diagnostico: consultaOriginal.diagnostico,
+            status_consulta: consultaOriginal.status_consulta,
+            createdAt: consultaOriginal.createdAt,
+            updatedAt: consultaOriginal.updatedAt
+          })
         );
 
         setConsultas(consultasEnriquecidas);

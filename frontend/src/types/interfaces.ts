@@ -1,6 +1,7 @@
 // Interfaces relacionadas a Animais
 export interface Animal {
   id_animal: number;
+  nome: string;
   especie?: string;
   raca: string;
   peso?: number;
@@ -66,4 +67,6 @@ export interface Consultas {
   nomeFuncionario?: string;
   createdAt?: string;
   updatedAt?: string;
+  animal?: Animal;
+  funcionario?: Funcionario;
 }

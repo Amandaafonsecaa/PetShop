@@ -21,9 +21,9 @@ import {
 } from "../types/interfaces";
 
 interface ConsultaForm {
-  id_consulta: string;
-  id_animal: string;
-  id_funcionario: string;
+  id_consulta: number;
+  id_animal: number;
+  id_funcionario: number;
   data_hora: Date;
   diagnostico: string | null;
   status_consulta: 'Agendada' | 'Realizada' | 'Cancelada' | 'Remarcada' | 'Não Compareceu' | 'Em Andamento';
@@ -50,15 +50,13 @@ export default function Consultas() {
   const [modalDetalhes, setModalDetalhes] = useState(false);
 
   const[formData, setFormData] = useState<ConsultaForm>({
-    id_consulta: '',
-    id_animal: '',
-    id_funcionario: '',
+    id_consulta: 0,
+    id_animal: 0,
+    id_funcionario: 0,
     data_hora: new Date(),
-    diagnostico: "",
+    diagnostico: null,
     status_consulta: "Agendada",
-    preco: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    preco: 0
   });
 
   // Estado para controlar a consulta selecionada
@@ -100,9 +98,9 @@ export default function Consultas() {
       await fetchDashboardData();
       setModalAdicionar(false);
       setFormData({
-        id_consulta: '',
-        id_animal: '',
-        id_funcionario: '',
+        id_consulta: 0,
+        id_animal: 0,
+        id_funcionario: 0,
         data_hora: new Date(),
         diagnostico: null,
         status_consulta: 'Agendada',
@@ -177,9 +175,9 @@ export default function Consultas() {
       case "editar":
         if (consultaSelecionada) {
           setFormData({
-            id_consulta: consultaSelecionada.id_consulta || '',
-            id_animal: String(consultaSelecionada.id_animal),
-            id_funcionario: String(consultaSelecionada.id_funcionario),
+            id_consulta: consultaSelecionada.id_consulta,
+            id_animal: consultaSelecionada.id_animal,
+            id_funcionario: consultaSelecionada.id_funcionario,
             data_hora: new Date(consultaSelecionada.data_hora),
             diagnostico: consultaSelecionada.diagnostico,
             status_consulta: consultaSelecionada.status_consulta as 'Agendada' | 'Realizada' | 'Cancelada' | 'Remarcada' | 'Não Compareceu' | 'Em Andamento',
@@ -241,13 +239,13 @@ export default function Consultas() {
         return !isNaN(dataConsulta.getTime()) && dataConsulta.toDateString() === hojeString;
       });
 
-      const consultasEnriquecidas = consultasFiltradas.map((consultaOriginal) => ({
+      const consultasEnriquecidas: Consultas[] = consultasFiltradas.map((consultaOriginal) => ({
         ...consultaOriginal,
-        id_animal: String(consultaOriginal.id_animal),
-        id_funcionario: String(consultaOriginal.id_funcionario),
+        id_animal: Number(consultaOriginal.id_animal),
+        id_funcionario: Number(consultaOriginal.id_funcionario),
         preco: Number(consultaOriginal.preco),
-        nomeAnimal: animaisData.find(a => String(a.id_animal) === String(consultaOriginal.id_animal))?.nome || "Animal não encontrado",
-        nomeFuncionario: funcionarioData.find(f => String(f.id_funcionario) === String(consultaOriginal.id_funcionario))?.nome || "Funcionário não encontrado"
+        nomeAnimal: animaisData.find(a => a.id_animal === Number(consultaOriginal.id_animal))?.nome || "Animal não encontrado",
+        nomeFuncionario: funcionarioData.find(f => f.id_funcionario === Number(consultaOriginal.id_funcionario))?.nome || "Funcionário não encontrado"
       }));
 
       console.log('Consultas processadas:', consultasEnriquecidas); // Debug
@@ -442,7 +440,7 @@ export default function Consultas() {
           <label className="required">Animal:</label>
           <select
             value={formData.id_animal}
-            onChange={(e) => setFormData({ ...formData, id_animal: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, id_animal: Number(e.target.value) })}
             required
           >
             <option value="">Selecione um animal</option>
@@ -458,7 +456,7 @@ export default function Consultas() {
           <label className="required">Veterinário:</label>
           <select
             value={formData.id_funcionario}
-            onChange={(e) => setFormData({ ...formData, id_funcionario: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, id_funcionario: Number(e.target.value) })}
             required
           >
             <option value="">Selecione um veterinário</option>
@@ -537,13 +535,13 @@ export default function Consultas() {
           <label className="required">Animal:</label>
           <select
             value={formData.id_animal}
-            onChange={(e) => setFormData({ ...formData, id_animal: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, id_animal: Number(e.target.value) })}
             required
           >
             <option value="">Selecione um animal</option>
             {animais && animais.map((animal) => (
               <option key={animal.id_animal} value={animal.id_animal}>
-                {animal.nome || 'Nome não disponível'}
+                {animal.nomeAnimal || 'Nome não disponível'}
               </option>
             ))}
           </select>
@@ -553,7 +551,7 @@ export default function Consultas() {
           <label className="required">Veterinário:</label>
           <select
             value={formData.id_funcionario}
-            onChange={(e) => setFormData({ ...formData, id_funcionario: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, id_funcionario: Number(e.target.value) })}
             required
           >
             <option value="">Selecione um veterinário</option>
