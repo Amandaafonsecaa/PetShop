@@ -1,10 +1,16 @@
 .navbar {
   background-color: #f7f8fd;
   display: flex;
-  background-color: #f7f8fd;
-  padding: 10px;
+  padding: 1rem;
   border-radius: 20px;
   margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1090px;
+  margin: 0 auto 20px;
+  box-sizing: border-box;
 }
 
 .navbar-text {
@@ -30,13 +36,15 @@
 }
 
 .navbar .logo img {
-  width: 3rem;
+  width: 2.5rem;
 }
 
 .navbar-text ul {
   list-style: none;
   display: flex;
   gap: 2rem;
+  margin: 0;
+  padding: 0;
 }
 
 .navbar-text li {
@@ -49,14 +57,19 @@
   color: #1E293B;
   font-weight: 500;
   transition: color 0.3s ease;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
 }
 
 .navbar-text a:hover {
   color: #4F46E5;
+  background-color: rgba(79, 70, 229, 0.1);
 }
 
 .navbar-text a.active {
   color: #4F46E5;
+  background-color: rgba(79, 70, 229, 0.1);
 }
 
 .navbar-text li::after {
@@ -73,4 +86,33 @@
 .navbar-text li:hover::after,
 .navbar-text a.active + li::after {
   width: 100%;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 1rem;
+    margin: 0 1rem 20px;
+    width: calc(100% - 2rem);
+  }
+
+  .navbar-text ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .navbar-text li {
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar-text a {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
 }

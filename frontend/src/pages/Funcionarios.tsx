@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import ListarFuncionarios from "../components/Funcionarios/ListarFuncionarios";
 import BtnCrud from '../components/ui/BtnCrud'
 import Modal from '../components/ui/Modal'
+import NomeTela from "../components/ui/NomeTela";
 import lupaIcon from '../assets/icons/lupa.png'
 import adicionarIcon from "../assets/icons/adicionar.png";
 import apagarIcon from "../assets/icons/apagar.png";
@@ -253,8 +254,9 @@ export default function Funcionarios() {
 
   return (
     <div className="funcionarios">
-      <div className="navbar">
-        <Navbar />
+      <Navbar />
+      <div className="nome-tela-container">
+        <NomeTela message="Funcionários Cadastrados" />
       </div>
       {/* Campo de Pesquisa (Lupa) */}
       <div className="barra-pesquisa-container">

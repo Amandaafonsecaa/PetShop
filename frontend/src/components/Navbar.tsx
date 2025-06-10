@@ -5,70 +5,42 @@ import "./Navbar.css";
 
 export default function Navbar() {
   return (
-    <div className="navbar">
+    <nav className="navbar">
       <div className="logo">
-        <Link
-          to="/"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            textDecoration: "none",
-            color: "inherit",
-          }}
-        >
-          <img
-            src={logo}
-            alt="VetCare Logo"
-            style={{ height: "30px", marginRight: "10px" }}
-          />
-          <p style={{ margin: 0 }}>VetCare</p>
+        <Link to="/">
+          <img src={logo} alt="VetCare Logo" />
+          <p>VetCare</p>
         </Link>
       </div>
       <div className="navbar-text">
         <ul>
           <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-            >
+            <NavLink to="/" end>
               Dashboard
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/consultas"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-            >
+            <NavLink to="/consultas">
               Consultas
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/animais"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-            >
+            <NavLink to="/animais">
               Animais
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/funcionarios"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-            >
+            <NavLink to="/tutores">
+              Tutores
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/funcionarios">
               Funcionários
             </NavLink>
           </li>
-
         </ul>
       </div>
-    </div>
+    </nav>
   );
 }

@@ -166,10 +166,8 @@ export default function Home() {
   if (loading) {
     return (
       <div className="home">
-        <div className="navbar">
-          <Navbar />
-        </div>
-        <div className="nome-tela">
+        <Navbar />
+        <div className="nome-tela-container">
           <NomeTela message="Dashboard" />
         </div>
         <p style={{ textAlign: "center", fontSize: "1.2em" }}>
@@ -182,10 +180,8 @@ export default function Home() {
   if (error) {
     return (
       <div className="home">
-        <div className="navbar">
-          <Navbar />
-        </div>
-        <div className="nome-tela">
+        <Navbar />
+        <div className="nome-tela-container">
           <NomeTela message="Dashboard" />
         </div>
         <p style={{ textAlign: "center", fontSize: "1.2em" }}>
@@ -197,11 +193,9 @@ export default function Home() {
 
   return (
     <div className="home">
-      <div className="navbar">
-        <Navbar />
-      </div>
-      <div className="nome-tela">
-        <NomeTela message="DashBoard" />
+      <Navbar />
+      <div className="nome-tela-container">
+        <NomeTela message="Dashboard" />
       </div>
       <div className="dashboard-card" style={dashboardCardContainerStyle}>
         <InfoCard

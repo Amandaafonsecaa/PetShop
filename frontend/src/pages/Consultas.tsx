@@ -307,10 +307,8 @@ export default function Consultas() {
 
   return (
     <div className="consultas">
-      <div className="navbar">
-        <Navbar />
-      </div>
-      <div className="consultas-hoje">
+      <Navbar />
+      <div className="nome-tela-container">
         <NomeTela message="Consultas de Hoje" />
       </div>
 
