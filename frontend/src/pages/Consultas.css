@@ -55,11 +55,11 @@
 }
 
 .consulta-card {
-  width: 100%;
+  width: 66rem;
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid transparent;
-  border-radius: 8px;
+  border-radius: 14px;
 }
 
 .consulta-card:hover {
