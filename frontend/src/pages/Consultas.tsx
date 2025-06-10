@@ -320,6 +320,7 @@ export default function Consultas() {
     return (
       <div className="consultas">
         <div className="nome-tela">
+          <Navbar />
           <NomeTela message="Consultas" />
         </div>
         <p>Carregando consultas...</p>
