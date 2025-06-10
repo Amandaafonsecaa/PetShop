@@ -5,6 +5,9 @@ import Navbar from "../components/Navbar";
 import NomeTela from "../components/ui/NomeTela";
 import ConsultasHoje from "../components/Home/ConsultasHoje";
 import Modal from "../components/ui/Modal";
+import ListarConsultas from '../components/Home/ListarConsultas';
+import { validateDateTime, validateNumber } from '../utils/validation';
+import type { FormErrors } from '../utils/validation';
 
 import adicionarIcon from "../assets/icons/adicionar.png";
 import apagarIcon from "../assets/icons/apagar.png";
@@ -63,6 +66,8 @@ export default function Consultas() {
   const [consultaSelecionada, setConsultaSelecionada] =
     useState<Consultas | null>(null);
 
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
+
   // Função para lidar com a seleção de uma consulta
   const handleSelecionarConsulta = (consulta: Consultas) => {
     if (consultaSelecionada?.id_consulta === consulta.id_consulta) {
@@ -73,14 +78,27 @@ export default function Consultas() {
   };
 
   // Funções CRUD
-  const handleAdicionarConsulta = async () => {
-    try {
-      // Validação dos campos obrigatórios
-      if (!formData.id_animal || !formData.id_funcionario || !formData.data_hora || !formData.preco) {
-        alert('Por favor, preencha todos os campos obrigatórios.');
-        return;
-      }
+  const validateForm = () => {
+    const errors: FormErrors = {};
+    const dataHoraError = validateDateTime(formData.data_hora);
+    const precoError = validateNumber(formData.preco, 'preco');
 
+    if (!formData.id_animal) errors['id_animal'] = 'Animal é obrigatório';
+    if (!formData.id_funcionario) errors['id_funcionario'] = 'Veterinário é obrigatório';
+    if (dataHoraError) errors[dataHoraError.field] = dataHoraError.message;
+    if (!formData.status_consulta) errors['status_consulta'] = 'Status é obrigatório';
+    if (precoError) errors[precoError.field] = precoError.message;
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleAdicionarConsulta = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
       const response = await fetch("http://localhost:3001/api/consultas", {
         method: 'POST',
         headers: {
@@ -89,33 +107,35 @@ export default function Consultas() {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erro ao adicionar consulta');
+      if (response.ok) {
+        const novaConsulta = await response.json();
+        setConsultas([...consultas, novaConsulta]);
+        setModalAdicionar(false);
+        setFormData({
+          id_consulta: 0,
+          id_animal: 0,
+          id_funcionario: 0,
+          data_hora: new Date(),
+          status_consulta: 'Agendada',
+          preco: 0,
+          diagnostico: ''
+        });
+        setFormErrors({});
+        alert('Consulta adicionada com sucesso!');
+      } else {
+        throw new Error('Erro ao adicionar consulta');
       }
-
-      await fetchDashboardData();
-      setModalAdicionar(false);
-      setFormData({
-        id_consulta: 0,
-        id_animal: 0,
-        id_funcionario: 0,
-        data_hora: new Date(),
-        diagnostico: null,
-        status_consulta: 'Agendada',
-        preco: 0,
-        createdAt: undefined,
-        updatedAt: undefined
-      });
-      alert('Consulta adicionada com sucesso!');
     } catch (err: any) {
-      console.error('Erro:', err);
-      alert(err.message);
+      console.error('Erro ao adicionar consulta:', err);
+      alert(err.message || 'Erro ao adicionar consulta');
     }
   };
 
   const handleEditarConsulta = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
     if (!consultaSelecionada) return;
 
     try {
@@ -127,17 +147,30 @@ export default function Consultas() {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error('Erro ao editar consulta');
+      if (response.ok) {
+        const consultaAtualizada = await response.json();
+        setConsultas(consultas.map(consulta => 
+          consulta.id_consulta === consultaSelecionada.id_consulta ? consultaAtualizada : consulta
+        ));
+        setModalEditar(false);
+        setConsultaSelecionada(null);
+        setFormData({
+          id_consulta: 0,
+          id_animal: 0,
+          id_funcionario: 0,
+          data_hora: new Date(),
+          status_consulta: 'Agendada',
+          preco: 0,
+          diagnostico: ''
+        });
+        setFormErrors({});
+        alert('Consulta atualizada com sucesso!');
+      } else {
+        throw new Error('Erro ao atualizar consulta');
       }
-
-      await fetchDashboardData();
-      setModalEditar(false);
-      setConsultaSelecionada(null);
-      alert('Consulta atualizada com sucesso!');
     } catch (err: any) {
-      console.error('Erro:', err);
-      alert(err.message);
+      console.error('Erro ao editar consulta:', err);
+      alert(err.message || 'Erro ao editar consulta');
     }
   };
 
@@ -431,15 +464,23 @@ export default function Consultas() {
       {/* Modal Adicionar */}
       <Modal
         isOpen={modalAdicionar}
-        onClose={() => setModalAdicionar(false)}
+        onClose={() => {
+          setModalAdicionar(false);
+          setFormErrors({});
+        }}
         title="Adicionar Consulta"
       >
-        <div className="form-group">
+        <div className={`form-group ${formErrors.id_animal ? 'has-error' : ''}`}>
           <label className="required">Animal:</label>
           <select
             value={formData.id_animal}
-            onChange={(e) => setFormData({ ...formData, id_animal: Number(e.target.value) })}
-            required
+            onChange={(e) => {
+              setFormData({ ...formData, id_animal: Number(e.target.value) });
+              if (formErrors.id_animal) {
+                const { id_animal, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
           >
             <option value="">Selecione um animal</option>
             {animais && animais.map((animal) => (
@@ -448,14 +489,20 @@ export default function Consultas() {
               </option>
             ))}
           </select>
+          {formErrors.id_animal && <div className="error-message">{formErrors.id_animal}</div>}
         </div>
 
-        <div className="form-group">
+        <div className={`form-group ${formErrors.id_funcionario ? 'has-error' : ''}`}>
           <label className="required">Veterinário:</label>
           <select
             value={formData.id_funcionario}
-            onChange={(e) => setFormData({ ...formData, id_funcionario: Number(e.target.value) })}
-            required
+            onChange={(e) => {
+              setFormData({ ...formData, id_funcionario: Number(e.target.value) });
+              if (formErrors.id_funcionario) {
+                const { id_funcionario, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
           >
             <option value="">Selecione um veterinário</option>
             {funcionarios && funcionarios.map((funcionario) => (
@@ -464,25 +511,39 @@ export default function Consultas() {
               </option>
             ))}
           </select>
+          {formErrors.id_funcionario && <div className="error-message">{formErrors.id_funcionario}</div>}
         </div>
 
-        <div className="form-group">
+        <div className={`form-group ${formErrors.data_hora ? 'has-error' : ''}`}>
           <label className="required">Data e Hora:</label>
           <input
             type="datetime-local"
             value={formData.data_hora.toISOString().slice(0, 16)}
-            onChange={(e) => setFormData({ ...formData, data_hora: new Date(e.target.value) })}
-            required
+            onChange={(e) => {
+              setFormData({ ...formData, data_hora: new Date(e.target.value) });
+              if (formErrors.data_hora) {
+                const { data_hora, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
+            min={new Date().toISOString().slice(0, 16)}
           />
+          {formErrors.data_hora && <div className="error-message">{formErrors.data_hora}</div>}
         </div>
 
-        <div className="form-group">
+        <div className={`form-group ${formErrors.status_consulta ? 'has-error' : ''}`}>
           <label className="required">Status:</label>
           <select
             value={formData.status_consulta}
-            onChange={(e) => setFormData({ ...formData, status_consulta: e.target.value as 'Agendada' | 'Realizada' | 'Cancelada' | 'Remarcada' | 'Não Compareceu' | 'Em Andamento' })}
-            required
+            onChange={(e) => {
+              setFormData({ ...formData, status_consulta: e.target.value as 'Agendada' | 'Realizada' | 'Cancelada' | 'Remarcada' | 'Não Compareceu' | 'Em Andamento' });
+              if (formErrors.status_consulta) {
+                const { status_consulta, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
           >
+            <option value="">Selecione um status</option>
             <option value="Agendada">Agendada</option>
             <option value="Realizada">Realizada</option>
             <option value="Cancelada">Cancelada</option>
@@ -490,31 +551,44 @@ export default function Consultas() {
             <option value="Não Compareceu">Não Compareceu</option>
             <option value="Em Andamento">Em Andamento</option>
           </select>
+          {formErrors.status_consulta && <div className="error-message">{formErrors.status_consulta}</div>}
         </div>
 
-        <div className="form-group">
+        <div className={`form-group ${formErrors.preco ? 'has-error' : ''}`}>
           <label className="required">Preço:</label>
           <input
             type="number"
             value={formData.preco}
-            onChange={(e) => setFormData({ ...formData, preco: Number(e.target.value) })}
+            onChange={(e) => {
+              setFormData({ ...formData, preco: Number(e.target.value) });
+              if (formErrors.preco) {
+                const { preco, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
             step="0.01"
             min="0"
-            required
           />
+          {formErrors.preco && <div className="error-message">{formErrors.preco}</div>}
         </div>
 
         <div className="form-group">
           <label>Diagnóstico:</label>
           <textarea
             value={formData.diagnostico || ''}
-            onChange={(e) => setFormData({ ...formData, diagnostico: e.target.value || null })}
+            onChange={(e) => setFormData({ ...formData, diagnostico: e.target.value })}
             rows={4}
           />
         </div>
 
         <div className="modal-actions">
-          <button className="btn btn-secondary" onClick={() => setModalAdicionar(false)}>
+          <button 
+            className="btn btn-secondary" 
+            onClick={() => {
+              setModalAdicionar(false);
+              setFormErrors({});
+            }}
+          >
             Cancelar
           </button>
           <button className="btn btn-primary" onClick={handleAdicionarConsulta}>
@@ -526,31 +600,45 @@ export default function Consultas() {
       {/* Modal Editar */}
       <Modal
         isOpen={modalEditar}
-        onClose={() => setModalEditar(false)}
+        onClose={() => {
+          setModalEditar(false);
+          setFormErrors({});
+        }}
         title="Editar Consulta"
       >
-        <div className="form-group">
+        <div className={`form-group ${formErrors.id_animal ? 'has-error' : ''}`}>
           <label className="required">Animal:</label>
           <select
             value={formData.id_animal}
-            onChange={(e) => setFormData({ ...formData, id_animal: Number(e.target.value) })}
-            required
+            onChange={(e) => {
+              setFormData({ ...formData, id_animal: Number(e.target.value) });
+              if (formErrors.id_animal) {
+                const { id_animal, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
           >
             <option value="">Selecione um animal</option>
             {animais && animais.map((animal) => (
               <option key={animal.id_animal} value={animal.id_animal}>
-                {animal.nomeAnimal || 'Nome não disponível'}
+                {animal.nome || 'Nome não disponível'}
               </option>
             ))}
           </select>
+          {formErrors.id_animal && <div className="error-message">{formErrors.id_animal}</div>}
         </div>
 
-        <div className="form-group">
+        <div className={`form-group ${formErrors.id_funcionario ? 'has-error' : ''}`}>
           <label className="required">Veterinário:</label>
           <select
             value={formData.id_funcionario}
-            onChange={(e) => setFormData({ ...formData, id_funcionario: Number(e.target.value) })}
-            required
+            onChange={(e) => {
+              setFormData({ ...formData, id_funcionario: Number(e.target.value) });
+              if (formErrors.id_funcionario) {
+                const { id_funcionario, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
           >
             <option value="">Selecione um veterinário</option>
             {funcionarios && funcionarios.map((funcionario) => (
@@ -559,25 +647,39 @@ export default function Consultas() {
               </option>
             ))}
           </select>
+          {formErrors.id_funcionario && <div className="error-message">{formErrors.id_funcionario}</div>}
         </div>
 
-        <div className="form-group">
+        <div className={`form-group ${formErrors.data_hora ? 'has-error' : ''}`}>
           <label className="required">Data e Hora:</label>
           <input
             type="datetime-local"
             value={formData.data_hora.toISOString().slice(0, 16)}
-            onChange={(e) => setFormData({ ...formData, data_hora: new Date(e.target.value) })}
-            required
+            onChange={(e) => {
+              setFormData({ ...formData, data_hora: new Date(e.target.value) });
+              if (formErrors.data_hora) {
+                const { data_hora, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
+            min={new Date().toISOString().slice(0, 16)}
           />
+          {formErrors.data_hora && <div className="error-message">{formErrors.data_hora}</div>}
         </div>
 
-        <div className="form-group">
+        <div className={`form-group ${formErrors.status_consulta ? 'has-error' : ''}`}>
           <label className="required">Status:</label>
           <select
             value={formData.status_consulta}
-            onChange={(e) => setFormData({ ...formData, status_consulta: e.target.value as 'Agendada' | 'Realizada' | 'Cancelada' | 'Remarcada' | 'Não Compareceu' | 'Em Andamento' })}
-            required
+            onChange={(e) => {
+              setFormData({ ...formData, status_consulta: e.target.value as 'Agendada' | 'Realizada' | 'Cancelada' | 'Remarcada' | 'Não Compareceu' | 'Em Andamento' });
+              if (formErrors.status_consulta) {
+                const { status_consulta, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
           >
+            <option value="">Selecione um status</option>
             <option value="Agendada">Agendada</option>
             <option value="Realizada">Realizada</option>
             <option value="Cancelada">Cancelada</option>
@@ -585,31 +687,44 @@ export default function Consultas() {
             <option value="Não Compareceu">Não Compareceu</option>
             <option value="Em Andamento">Em Andamento</option>
           </select>
+          {formErrors.status_consulta && <div className="error-message">{formErrors.status_consulta}</div>}
         </div>
 
-        <div className="form-group">
+        <div className={`form-group ${formErrors.preco ? 'has-error' : ''}`}>
           <label className="required">Preço:</label>
           <input
             type="number"
             value={formData.preco}
-            onChange={(e) => setFormData({ ...formData, preco: Number(e.target.value) })}
+            onChange={(e) => {
+              setFormData({ ...formData, preco: Number(e.target.value) });
+              if (formErrors.preco) {
+                const { preco, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
             step="0.01"
             min="0"
-            required
           />
+          {formErrors.preco && <div className="error-message">{formErrors.preco}</div>}
         </div>
 
         <div className="form-group">
           <label>Diagnóstico:</label>
           <textarea
             value={formData.diagnostico || ''}
-            onChange={(e) => setFormData({ ...formData, diagnostico: e.target.value || null })}
+            onChange={(e) => setFormData({ ...formData, diagnostico: e.target.value })}
             rows={4}
           />
         </div>
 
         <div className="modal-actions">
-          <button className="btn btn-secondary" onClick={() => setModalEditar(false)}>
+          <button 
+            className="btn btn-secondary" 
+            onClick={() => {
+              setModalEditar(false);
+              setFormErrors({});
+            }}
+          >
             Cancelar
           </button>
           <button className="btn btn-primary" onClick={handleEditarConsulta}>

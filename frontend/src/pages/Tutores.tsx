@@ -4,6 +4,9 @@ import NomeTela from "../components/ui/NomeTela";
 import BtnCrud from "../components/ui/BtnCrud";
 import Modal from "../components/ui/Modal";
 import ListarTutores from "../components/Tutores/ListarTutores";
+import { validateName, validatePhone, validateEmail, formatPhone } from '../utils/validation';
+import type { FormErrors } from '../utils/validation';
+import axios from 'axios';
 
 // Ícones
 import adicionarIcon from "../assets/icons/adicionar.png";
@@ -47,6 +50,8 @@ export default function Tutores() {
     telefone: "",
     email: "",
   });
+
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const fetchDadosIniciais = async () => {
     setLoading(true);
@@ -99,16 +104,26 @@ export default function Tutores() {
     }
   };
 
-  // funções crud
-  const handleAdicionarTutor = async () => {
-    try {
-      // Validação dos campos obrigatórios
-      if (!formData.nome || !formData.telefone || !formData.email) {
-        alert('Por favor, preencha todos os campos obrigatórios.');
-        return;
-      }
+  const validateForm = () => {
+    const errors: FormErrors = {};
+    const nameError = validateName(formData.nome);
+    const phoneError = validatePhone(formData.telefone);
+    const emailError = validateEmail(formData.email);
 
-      // Enviar para a API
+    if (nameError) errors[nameError.field] = nameError.message;
+    if (phoneError) errors[phoneError.field] = phoneError.message;
+    if (emailError) errors[emailError.field] = emailError.message;
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleAdicionarTutor = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
       const response = await fetch("http://localhost:3001/api/tutores", {
         method: 'POST',
         headers: {
@@ -130,6 +145,7 @@ export default function Tutores() {
         telefone: "",
         email: "",
       });
+      setFormErrors({});
       alert('Tutor adicionado com sucesso!');
     } catch (err: any) {
       console.error('Erro:', err);
@@ -138,6 +154,10 @@ export default function Tutores() {
   };
 
   const handleEditarTutor = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
     if (!tutorSelecionado) return;
 
     try {
@@ -157,6 +177,12 @@ export default function Tutores() {
       await fetchDadosIniciais();
       setModalEditar(false);
       setTutorSelecionado(null);
+      setFormData({
+        nome: "",
+        telefone: "",
+        email: "",
+      });
+      setFormErrors({});
       alert('Tutor atualizado com sucesso!');
     } catch (err: any) {
       console.error('Erro:', err);
@@ -354,35 +380,69 @@ export default function Tutores() {
       {/* Modal Adicionar */}
       <Modal
         isOpen={modalAdicionar}
-        onClose={() => setModalAdicionar(false)}
+        onClose={() => {
+          setModalAdicionar(false);
+          setFormErrors({});
+        }}
         title="Adicionar Tutor"
       >
-        <div className="form-group">
-          <label>Nome:</label>
+        <div className={`form-group ${formErrors.nome ? 'has-error' : ''}`}>
+          <label className="required">Nome:</label>
           <input
             type="text"
             value={formData.nome}
-            onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+            onChange={(e) => {
+              setFormData({ ...formData, nome: e.target.value });
+              if (formErrors.nome) {
+                const { nome, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
+            placeholder="Nome completo"
           />
+          {formErrors.nome && <div className="error-message">{formErrors.nome}</div>}
         </div>
-        <div className="form-group">
-          <label>Telefone:</label>
+        <div className={`form-group ${formErrors.telefone ? 'has-error' : ''}`}>
+          <label className="required">Telefone:</label>
           <input
-            type="text"
+            type="tel"
             value={formData.telefone}
-            onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
+            onChange={(e) => {
+              const formatted = formatPhone(e.target.value);
+              setFormData({ ...formData, telefone: formatted });
+              if (formErrors.telefone) {
+                const { telefone, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
+            placeholder="(00) 00000-0000"
           />
+          {formErrors.telefone && <div className="error-message">{formErrors.telefone}</div>}
         </div>
-        <div className="form-group">
-          <label>Email:</label>
+        <div className={`form-group ${formErrors.email ? 'has-error' : ''}`}>
+          <label className="required">Email:</label>
           <input
             type="email"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) => {
+              setFormData({ ...formData, email: e.target.value });
+              if (formErrors.email) {
+                const { email, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
+            placeholder="email@exemplo.com"
           />
+          {formErrors.email && <div className="error-message">{formErrors.email}</div>}
         </div>
         <div className="modal-actions">
-          <button className="btn btn-secondary" onClick={() => setModalAdicionar(false)}>
+          <button 
+            className="btn btn-secondary" 
+            onClick={() => {
+              setModalAdicionar(false);
+              setFormErrors({});
+            }}
+          >
             Cancelar
           </button>
           <button className="btn btn-primary" onClick={handleAdicionarTutor}>
@@ -394,35 +454,69 @@ export default function Tutores() {
       {/* Modal Editar */}
       <Modal
         isOpen={modalEditar}
-        onClose={() => setModalEditar(false)}
+        onClose={() => {
+          setModalEditar(false);
+          setFormErrors({});
+        }}
         title="Editar Tutor"
       >
-        <div className="form-group">
-          <label>Nome:</label>
+        <div className={`form-group ${formErrors.nome ? 'has-error' : ''}`}>
+          <label className="required">Nome:</label>
           <input
             type="text"
             value={formData.nome}
-            onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+            onChange={(e) => {
+              setFormData({ ...formData, nome: e.target.value });
+              if (formErrors.nome) {
+                const { nome, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
+            placeholder="Nome completo"
           />
+          {formErrors.nome && <div className="error-message">{formErrors.nome}</div>}
         </div>
-        <div className="form-group">
-          <label>Telefone:</label>
+        <div className={`form-group ${formErrors.telefone ? 'has-error' : ''}`}>
+          <label className="required">Telefone:</label>
           <input
-            type="text"
+            type="tel"
             value={formData.telefone}
-            onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
+            onChange={(e) => {
+              const formatted = formatPhone(e.target.value);
+              setFormData({ ...formData, telefone: formatted });
+              if (formErrors.telefone) {
+                const { telefone, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
+            placeholder="(00) 00000-0000"
           />
+          {formErrors.telefone && <div className="error-message">{formErrors.telefone}</div>}
         </div>
-        <div className="form-group">
-          <label>Email:</label>
+        <div className={`form-group ${formErrors.email ? 'has-error' : ''}`}>
+          <label className="required">Email:</label>
           <input
             type="email"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) => {
+              setFormData({ ...formData, email: e.target.value });
+              if (formErrors.email) {
+                const { email, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
+            placeholder="email@exemplo.com"
           />
+          {formErrors.email && <div className="error-message">{formErrors.email}</div>}
         </div>
         <div className="modal-actions">
-          <button className="btn btn-secondary" onClick={() => setModalEditar(false)}>
+          <button 
+            className="btn btn-secondary" 
+            onClick={() => {
+              setModalEditar(false);
+              setFormErrors({});
+            }}
+          >
             Cancelar
           </button>
           <button className="btn btn-primary" onClick={handleEditarTutor}>

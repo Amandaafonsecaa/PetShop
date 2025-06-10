@@ -1,0 +1,115 @@
+.consultas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.consulta-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.consulta-info {
+  flex: 1;
+}
+
+.consulta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.consulta-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+}
+
+.consulta-info p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
+.consulta-info strong {
+  color: #111827;
+  font-weight: 500;
+}
+
+.consulta-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.consulta-actions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 100px;
+}
+
+.btn-view {
+  background-color: #2563eb;
+  color: white;
+}
+
+.btn-view:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-edit {
+  background-color: #059669;
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #047857;
+}
+
+.btn-delete {
+  background-color: #dc2626;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #b91c1c;
+}
+
+@media (max-width: 640px) {
+  .consulta-card {
+    flex-direction: column;
+  }
+
+  .consulta-actions {
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .consulta-actions button {
+    min-width: auto;
+  }
+} 

@@ -2,14 +2,14 @@
 export interface Animal {
   id_animal: number;
   nome: string;
-  especie?: string;
+  especie: string;
   raca: string;
-  peso?: number;
-  sexo?: string;
-  data_nascimento?: Date;
-  observacoes_medicas?: string | null;
-  status_animal: "Ativo" | "Inativo" | "Falecido";
+  peso: number;
+  sexo: string;
+  data_nascimento: Date;
   id_tutor: number;
+  observacoes_medicas: string | null;
+  status_animal: 'Ativo' | 'Inativo' | 'Falecido';
   createdAt?: Date;
   updatedAt?: Date;
 

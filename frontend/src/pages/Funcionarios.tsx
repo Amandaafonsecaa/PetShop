@@ -11,6 +11,8 @@ import apagarIcon from "../assets/icons/apagar.png";
 import editarIcon from "../assets/icons/editar.png";
 import listarIcon from "../assets/icons/ver.png";
 import './Funcionario.css'
+import { validateName, validatePhone, validateEmail, formatPhone } from '../utils/validation';
+import type { FormErrors } from '../utils/validation';
 
 interface FuncionarioForm {
   nome: string;
@@ -51,6 +53,8 @@ export default function Funcionarios() {
     telefone: '',
     email: ''
   });
+
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   // Carregar funcionários
   const carregarFuncionarios = async () => {
@@ -109,15 +113,29 @@ export default function Funcionarios() {
     }
   };
 
+  const validateForm = () => {
+    const errors: FormErrors = {};
+    const nameError = validateName(formData.nome);
+    const phoneError = validatePhone(formData.telefone);
+    const emailError = validateEmail(formData.email);
+    const cargoError = validateName(formData.cargo); // Usando a mesma validação de nome para cargo
+
+    if (nameError) errors[nameError.field] = nameError.message;
+    if (phoneError) errors[phoneError.field] = phoneError.message;
+    if (emailError) errors[emailError.field] = emailError.message;
+    if (cargoError) errors['cargo'] = cargoError.message;
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   // Funções CRUD
   const handleAdicionarFuncionario = async () => {
-    try {
-      // Validação dos campos
-      if (!formData.nome || !formData.cargo || !formData.telefone || !formData.email) {
-        alert('Por favor, preencha todos os campos.');
-        return;
-      }
+    if (!validateForm()) {
+      return;
+    }
 
+    try {
       const response = await fetch("http://localhost:3001/api/funcionarios", {
         method: 'POST',
         headers: {
@@ -126,23 +144,32 @@ export default function Funcionarios() {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erro ao adicionar funcionário');
+      if (response.ok) {
+        const novoFuncionario = await response.json();
+        setListaCompletaFuncionarios([...listaCompletaFuncionarios, novoFuncionario]);
+        setModalAdicionar(false);
+        setFormData({
+          nome: "",
+          cargo: "",
+          telefone: "",
+          email: "",
+        });
+        setFormErrors({});
+        alert('Funcionário adicionado com sucesso!');
+      } else {
+        throw new Error('Erro ao adicionar funcionário');
       }
-
-      await carregarFuncionarios();
-      setModalAdicionar(false);
-      setFormData({ nome: '', cargo: '', telefone: '', email: '' });
-      alert('Funcionário adicionado com sucesso!');
     } catch (err: any) {
-      console.error('Erro:', err);
-      alert(err.message);
+      console.error('Erro ao adicionar funcionário:', err);
+      alert(err.message || 'Erro ao adicionar funcionário');
     }
   };
 
   const handleEditarFuncionario = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
     if (!funcionarioSelecionado) return;
 
     try {
@@ -154,16 +181,27 @@ export default function Funcionarios() {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error('Erro ao editar funcionário');
+      if (response.ok) {
+        const funcionarioAtualizado = await response.json();
+        setListaCompletaFuncionarios(listaCompletaFuncionarios.map(func => 
+          func.id_funcionario === funcionarioSelecionado.id_funcionario ? funcionarioAtualizado : func
+        ));
+        setModalEditar(false);
+        setFuncionarioSelecionado(null);
+        setFormData({
+          nome: "",
+          cargo: "",
+          telefone: "",
+          email: "",
+        });
+        setFormErrors({});
+        alert('Funcionário atualizado com sucesso!');
+      } else {
+        throw new Error('Erro ao atualizar funcionário');
       }
-
-      await carregarFuncionarios();
-      setModalEditar(false);
-      setFuncionarioSelecionado(null);
     } catch (err: any) {
-      console.error('Erro:', err);
-      alert(err.message);
+      console.error('Erro ao editar funcionário:', err);
+      alert(err.message || 'Erro ao editar funcionário');
     }
   };
 
@@ -361,47 +399,85 @@ export default function Funcionarios() {
       {/* Modal Adicionar */}
       <Modal
         isOpen={modalAdicionar}
-        onClose={() => setModalAdicionar(false)}
+        onClose={() => {
+          setModalAdicionar(false);
+          setFormErrors({});
+        }}
         title="Adicionar Funcionário"
       >
-        <div className="form-group">
+        <div className={`form-group ${formErrors.nome ? 'has-error' : ''}`}>
           <label className="required">Nome:</label>
           <input
             type="text"
             value={formData.nome}
-            onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+            onChange={(e) => {
+              setFormData({ ...formData, nome: e.target.value });
+              if (formErrors.nome) {
+                const { nome, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
             placeholder="Nome completo"
           />
+          {formErrors.nome && <div className="error-message">{formErrors.nome}</div>}
         </div>
-        <div className="form-group">
+        <div className={`form-group ${formErrors.cargo ? 'has-error' : ''}`}>
           <label className="required">Cargo:</label>
           <input
             type="text"
             value={formData.cargo}
-            onChange={(e) => setFormData({ ...formData, cargo: e.target.value })}
+            onChange={(e) => {
+              setFormData({ ...formData, cargo: e.target.value });
+              if (formErrors.cargo) {
+                const { cargo, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
             placeholder="Ex: Veterinário, Auxiliar, Recepcionista..."
           />
+          {formErrors.cargo && <div className="error-message">{formErrors.cargo}</div>}
         </div>
-        <div className="form-group">
+        <div className={`form-group ${formErrors.telefone ? 'has-error' : ''}`}>
           <label className="required">Telefone:</label>
           <input
             type="tel"
             value={formData.telefone}
-            onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
+            onChange={(e) => {
+              const formatted = formatPhone(e.target.value);
+              setFormData({ ...formData, telefone: formatted });
+              if (formErrors.telefone) {
+                const { telefone, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
             placeholder="(00) 00000-0000"
           />
+          {formErrors.telefone && <div className="error-message">{formErrors.telefone}</div>}
         </div>
-        <div className="form-group">
+        <div className={`form-group ${formErrors.email ? 'has-error' : ''}`}>
           <label className="required">Email:</label>
           <input
             type="email"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) => {
+              setFormData({ ...formData, email: e.target.value });
+              if (formErrors.email) {
+                const { email, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
             placeholder="email@exemplo.com"
           />
+          {formErrors.email && <div className="error-message">{formErrors.email}</div>}
         </div>
         <div className="modal-actions">
-          <button className="btn btn-secondary" onClick={() => setModalAdicionar(false)}>
+          <button 
+            className="btn btn-secondary" 
+            onClick={() => {
+              setModalAdicionar(false);
+              setFormErrors({});
+            }}
+          >
             Cancelar
           </button>
           <button className="btn btn-primary" onClick={handleAdicionarFuncionario}>
@@ -413,47 +489,85 @@ export default function Funcionarios() {
       {/* Modal Editar */}
       <Modal
         isOpen={modalEditar}
-        onClose={() => setModalEditar(false)}
+        onClose={() => {
+          setModalEditar(false);
+          setFormErrors({});
+        }}
         title="Editar Funcionário"
       >
-        <div className="form-group">
+        <div className={`form-group ${formErrors.nome ? 'has-error' : ''}`}>
           <label className="required">Nome:</label>
           <input
             type="text"
             value={formData.nome}
-            onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+            onChange={(e) => {
+              setFormData({ ...formData, nome: e.target.value });
+              if (formErrors.nome) {
+                const { nome, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
             placeholder="Nome completo"
           />
+          {formErrors.nome && <div className="error-message">{formErrors.nome}</div>}
         </div>
-        <div className="form-group">
+        <div className={`form-group ${formErrors.cargo ? 'has-error' : ''}`}>
           <label className="required">Cargo:</label>
           <input
             type="text"
             value={formData.cargo}
-            onChange={(e) => setFormData({ ...formData, cargo: e.target.value })}
+            onChange={(e) => {
+              setFormData({ ...formData, cargo: e.target.value });
+              if (formErrors.cargo) {
+                const { cargo, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
             placeholder="Ex: Veterinário, Auxiliar, Recepcionista..."
           />
+          {formErrors.cargo && <div className="error-message">{formErrors.cargo}</div>}
         </div>
-        <div className="form-group">
+        <div className={`form-group ${formErrors.telefone ? 'has-error' : ''}`}>
           <label className="required">Telefone:</label>
           <input
             type="tel"
             value={formData.telefone}
-            onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
+            onChange={(e) => {
+              const formatted = formatPhone(e.target.value);
+              setFormData({ ...formData, telefone: formatted });
+              if (formErrors.telefone) {
+                const { telefone, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
             placeholder="(00) 00000-0000"
           />
+          {formErrors.telefone && <div className="error-message">{formErrors.telefone}</div>}
         </div>
-        <div className="form-group">
+        <div className={`form-group ${formErrors.email ? 'has-error' : ''}`}>
           <label className="required">Email:</label>
           <input
             type="email"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) => {
+              setFormData({ ...formData, email: e.target.value });
+              if (formErrors.email) {
+                const { email, ...rest } = formErrors;
+                setFormErrors(rest);
+              }
+            }}
             placeholder="email@exemplo.com"
           />
+          {formErrors.email && <div className="error-message">{formErrors.email}</div>}
         </div>
         <div className="modal-actions">
-          <button className="btn btn-secondary" onClick={() => setModalEditar(false)}>
+          <button 
+            className="btn btn-secondary" 
+            onClick={() => {
+              setModalEditar(false);
+              setFormErrors({});
+            }}
+          >
             Cancelar
           </button>
           <button className="btn btn-primary" onClick={handleEditarFuncionario}>
