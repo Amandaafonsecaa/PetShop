@@ -7,11 +7,14 @@ export interface Animal {
   peso: number;
   sexo: string;
   data_nascimento: Date;
-  observacoes_medicas: string | null;
-  status_animal: "Ativo" | "Inativo" | "Falecido";
   id_tutor: number;
+  observacoes_medicas: string | null;
+  status_animal: 'Ativo' | 'Inativo' | 'Falecido';
   createdAt?: Date;
   updatedAt?: Date;
+
+  nomeAnimal?: string;
+  nomeTutor?: string;
 }
 
 // Interfaces relacionadas a Tutores
@@ -30,7 +33,12 @@ export interface Pagamento {
   id_consulta: number;
   valor: number;
   data_pagamento: Date;
-  metodo: "Cartão de Crédito" | "Cartão de Débito" | "Dinheiro" | "Pix" | "Transferência";
+  metodo:
+    | "Cartão de Crédito"
+    | "Cartão de Débito"
+    | "Dinheiro"
+    | "Pix"
+    | "Transferência";
   status_pagamento: "Pendente" | "Pago" | "Cancelado" | "Reembolsado";
   createdAt?: Date;
   updatedAt?: Date;
@@ -45,4 +53,20 @@ export interface Funcionario {
   email: string;
   createdAt?: Date;
   updatedAt?: Date;
-} 
+}
+
+export interface Consultas {
+  id_consulta: number;
+  id_animal: number;
+  id_funcionario: number;
+  data_hora: string;
+  diagnostico: string | null;
+  status_consulta: 'Agendada' | 'Realizada' | 'Cancelada' | 'Remarcada' | 'Não Compareceu' | 'Em Andamento';
+  preco: number;
+  nomeAnimal?: string;
+  nomeFuncionario?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  animal?: Animal;
+  funcionario?: Funcionario;
+}

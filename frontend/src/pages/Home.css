@@ -1,22 +1,37 @@
-.home-container {
-    display: flex;
-  }
-  
-  .main-content {
-    margin-left: 20rem;
-    padding: 20px;
-    width: calc(100% - 20rem);
-  }
-  
-  .dashboard-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    padding: 20px 0;
-  }
-  
-  .loading-text, .error-text {
-    text-align: center;
-    font-size: 1.2em;
-  }
+.home {
+  width: 100%;
+  max-width: 1090px;
+  margin: 0 auto;
+}
+
+.dashboard-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px 0;
+  width: 100%;
+}
+
+.consultas-hoje {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.consultas-hoje .nome-tela {
+  margin-bottom: 1rem;
+}
+
+.loading-text,
+.error-text {
+  text-align: center;
+  font-size: 1.2em;
+  margin-top: 2rem;
+}
+
+.nome-tela-container {
+  width: 100%;
+}

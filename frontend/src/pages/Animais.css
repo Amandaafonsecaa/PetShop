@@ -1,0 +1,107 @@
+.animais-pagina{
+   width: 1090px;
+  text-align: center;
+}
+
+.input-pesquisa-animais{
+  background-color: #f7f8fd;
+  border-style: none;
+  padding-left: 1rem;
+  align-items: center;
+  justify-content: center;
+  color: #1e293b;
+  width: 300px;
+}
+
+.lista-animais-container{
+  background-color: #f7f8fd; 
+  border-radius: 15px;       
+  color: #1e293b;    
+  align-items: center;
+  padding: 1.3rem;             
+  margin-bottom: 0rem;       
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
+  display: flex;
+  flex-direction: column;
+  align-items: center;      
+  text-align: center;
+  justify-content: space-around; 
+  width: 100%; 
+  box-sizing: border-box; 
+  border-left: 5px solid transparent; 
+  transition: border-left-color 0.3s ease; 
+}
+
+.barra-pesquisa-container img{
+  width: 1rem;
+}
+
+.barra-pesquisa-container{
+  background-color: #f7f8fd;
+  padding: 0.7rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.funcoes-crud-animais {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.animal-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.animal-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.animal-card.selecionado {
+  border-color: #4a90e2;
+  background-color: #f0f7ff;
+}
+
+.status-selecao {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+  font-weight: 500;
+}
+
+.botoes-paginacao-animais {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.btn-ver-mais,
+.btn-ver-menos {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-ver-mais:hover,
+.btn-ver-menos:hover {
+  background-color: #357abd;
+}
+

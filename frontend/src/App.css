@@ -1,12 +1,47 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
-* {
-  margin: 0;
-  padding: 0;
+.app {
+  max-width: 1090px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.content {
+  margin-top: 2rem;
+  width: 100%;
+}
+
+/* Classes base para todas as páginas */
+.home,
+.consultas,
+.animais,
+.funcionarios,
+.tutores-pagina {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+/* Estilos globais compartilhados */
+.nome-tela-container {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+/* Container principal para todas as páginas */
+.page-container {
+  width: 100%;
+  max-width: 1090px;
+  margin: 0 auto;
+  padding: 0 1rem;
   box-sizing: border-box;
 }

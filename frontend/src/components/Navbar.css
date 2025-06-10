@@ -1,61 +1,118 @@
 .navbar {
+  background-color: #f7f8fd;
   display: flex;
+  padding: 1rem;
+  border-radius: 20px;
+  margin-bottom: 20px;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 30px;
-  background-color: #ffffff;
-  color: #333;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  height: 60px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1090px;
+  margin: 0 auto 20px;
   box-sizing: border-box;
 }
 
-.navbarBrand {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #4F46E5;
-}
-
-.navbarMenu {
+.navbar-text {
+  list-style: none;
   display: flex;
   align-items: center;
 }
 
-.navItem {
-  margin-left: 20px;
-  color: #4A5568;
+.navbar .logo {
+  display: flex;
+  color: #1B5358;
+  font-weight: 700;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar .logo a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   text-decoration: none;
-  font-size: 0.9rem;
+  color: inherit;
+}
+
+.navbar .logo img {
+  width: 2.5rem;
+}
+
+.navbar-text ul {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-text li {
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.navbar-text a {
+  text-decoration: none;
+  color: #1E293B;
   font-weight: 500;
-  padding: 8px 12px;
-  border-radius: 6px;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: color 0.3s ease;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
 }
 
-.navItem:hover {
-  background-color: #EDF2F7;
-  color: #1A202C;
+.navbar-text a:hover {
+  color: #4F46E5;
+  background-color: rgba(79, 70, 229, 0.1);
 }
 
-.userName {
-  font-weight: 600;
-  cursor: default;
+.navbar-text a.active {
+  color: #4F46E5;
+  background-color: rgba(79, 70, 229, 0.1);
 }
 
-.userName:hover {
-  background-color: transparent;
-  color: #4A5568;
-}
-
-.logoutButton {
+.navbar-text li::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
   background-color: #4F46E5;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
+  transition: width 0.3s ease;
 }
 
-.logoutButton:hover {
-  background-color: #4338CA;
-  color: white;
+.navbar-text li:hover::after,
+.navbar-text a.active + li::after {
+  width: 100%;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 1rem;
+    margin: 0 1rem 20px;
+    width: calc(100% - 2rem);
+  }
+
+  .navbar-text ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .navbar-text li {
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar-text a {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
 }

@@ -1,0 +1,127 @@
+.consultas {
+  width: 1090px;
+  text-align: center;
+}
+
+.consultas-hoje {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.consultas-hoje .nome-tela {
+  margin-bottom: 1rem;
+}
+
+/* Estilo para o container de cards de consultas */
+.consultas-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.funcoes{
+  display: flex;
+  justify-content: space-around;
+  padding: 3rem 0;
+}
+
+.input-pesquisa-consultas {
+  background-color: #f7f8fd;
+  border-style: none;
+  padding-left: 1rem;
+  align-items: center;
+  justify-content: center;
+  color: #1e293b;
+  width: 300px;
+}
+
+.lista-consultas {
+  background-color: #f7f8fd;
+  border-radius: 15px;
+  color: #1e293b;
+  padding: 1.3rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.consulta-card {
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  border-radius: 8px;
+}
+
+.consulta-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.consulta-card.selecionado {
+  border-color: #4a90e2;
+  background-color: #f0f7ff;
+}
+
+.barra-pesquisa-container {
+  background-color: #f7f8fd;
+  padding: 0.7rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.barra-pesquisa-container img {
+  width: 1rem;
+}
+
+.funcoes-crud {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.status-selecao {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+  font-weight: 500;
+}
+
+.botoes-paginacao {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.btn-ver-mais,
+.btn-ver-menos {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-ver-mais:hover,
+.btn-ver-menos:hover {
+  background-color: #357abd;
+}

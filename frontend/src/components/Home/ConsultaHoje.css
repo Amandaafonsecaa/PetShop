@@ -1,0 +1,61 @@
+.consulta-card {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.consulta-card p {
+  flex: 1;
+  margin: 0;
+  padding: 0.5rem;
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
+#hora {
+  font-size: 1.1rem;
+  color: #111827;
+  font-weight: 500;
+}
+
+.consulta-card.status-agendada #status {
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.consulta-card.status-realizada #status {
+  color: #059669;
+  font-weight: 500;
+}
+
+.consulta-card.status-cancelada #status {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.consulta-card.status-remarcada #status {
+  color: #d97706;
+  font-weight: 500;
+}
+
+.consulta-card.status-não-compareceu #status {
+  color: #991b1b;
+  font-weight: 500;
+}
+
+.consulta-card.status-em-andamento #status {
+  color: #7c3aed;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .consulta-card {
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 0;
+  }
+}
