@@ -1,73 +1,152 @@
 .animal-card-content {
-  background-color: white;
+  background: white;
   border-radius: 8px;
   padding: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
   transition: all 0.2s ease;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.animal-info {
-  flex: 1;
+.animal-card-content:hover {
+  transform: translateY(-1px);
+  border-color: #4a90e2;
 }
 
 .animal-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
+  align-items: flex-start;
 }
 
-.animal-header h3 {
+.animal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.animal-nome {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: #111827;
+  color: #1a202c;
+}
+
+.animal-raca {
+  color: #64748b;
+  font-size: 0.813rem;
 }
 
 .status-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-ativo {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.status-inativo {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.animal-tutor {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tutor-nome {
+  font-size: 0.813rem;
+  color: #64748b;
+}
+
+.animal-detalhes-principais {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.detalhe {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: left;
+}
+
+.detalhe-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detalhe-valor {
   font-size: 0.875rem;
+  color: #1a202c;
   font-weight: 500;
-  color: white;
 }
 
-.status-badge.ativo {
-  background-color: #059669;
+.animal-info-secundaria {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
 }
 
-.status-badge.inativo {
-  background-color: #dc2626;
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
 }
 
-.status-badge.falecido {
-  background-color: #6b7280;
+.observacoes {
+  grid-column: 1 / -1;
 }
 
-.animal-info p {
-  margin: 0.25rem 0;
-  font-size: 0.95rem;
-  color: #4b5563;
+.observacoes .detalhe-valor {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #4a5568;
+  background-color: #f8fafc;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
 }
 
-.animal-info strong {
-  color: #111827;
-  font-weight: 500;
+.card-footer {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.expandir-texto {
+  font-size: 0.75rem;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.animal-card-content.expandido {
+  background-color: #f8fafc;
 }
 
 @media (max-width: 640px) {
-  .animal-card-content {
-    padding: 0.75rem;
-  }
-
   .animal-header {
     flex-direction: column;
-    align-items: flex-start;
     gap: 0.5rem;
   }
 
   .status-badge {
     align-self: flex-start;
+  }
+
+  .animal-detalhes-principais {
+    grid-template-columns: 1fr;
   }
 }

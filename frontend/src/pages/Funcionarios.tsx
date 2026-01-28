@@ -14,6 +14,31 @@ import './Funcionario.css'
 import { validateName, validatePhone, validateEmail, formatPhone } from '../utils/validation';
 import type { FormErrors } from '../utils/validation';
 
+// Dados mockados para quando o backend estiver indisponível
+const MOCK_FUNCIONARIOS: Funcionario[] = [
+  {
+    id_funcionario: 1,
+    nome: "Dr. João Silva",
+    cargo: "Veterinário",
+    telefone: "(85) 99999-0001",
+    email: "joao.silva@petshop.com",
+  },
+  {
+    id_funcionario: 2,
+    nome: "Dra. Ana Souza",
+    cargo: "Veterinária",
+    telefone: "(85) 98888-0002",
+    email: "ana.souza@petshop.com",
+  },
+  {
+    id_funcionario: 3,
+    nome: "Maria Oliveira",
+    cargo: "Recepcionista",
+    telefone: "(85) 97777-0003",
+    email: "maria.oliveira@petshop.com",
+  },
+];
+
 interface FuncionarioForm {
   nome: string;
   cargo: string;
@@ -73,8 +98,11 @@ export default function Funcionarios() {
         updatedAt: func.updatedAt ? new Date(func.updatedAt) : undefined,
       })));
     } catch (err: any) {
-      setError(err.message || "Erro ao carregar funcionários");
       console.error(err);
+      // Backend indisponível: usar dados mockados
+      console.warn("Backend indisponível. Usando dados mockados para funcionários.");
+      setListaCompletaFuncionarios(MOCK_FUNCIONARIOS);
+      setError(null);
     } finally {
       setLoading(false);
     }

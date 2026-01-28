@@ -23,6 +23,80 @@ import {
   type Consultas,
 } from "../types/interfaces";
 
+// Dados mockados para quando o backend estiver indisponível
+const MOCK_ANIMAIS: Animal[] = [
+  {
+    id_animal: 1,
+    nome: "Rex",
+    especie: "Cão",
+    raca: "Vira-lata",
+    peso: 12,
+    sexo: "Macho",
+    data_nascimento: new Date(),
+    id_tutor: 1,
+    observacoes_medicas: "Vacinado e saudável",
+    status_animal: "Ativo",
+  },
+  {
+    id_animal: 2,
+    nome: "Mimi",
+    especie: "Gato",
+    raca: "Siamês",
+    peso: 4,
+    sexo: "Fêmea",
+    data_nascimento: new Date(),
+    id_tutor: 2,
+    observacoes_medicas: "Alergia a ração X",
+    status_animal: "Ativo",
+  },
+];
+
+const MOCK_FUNCIONARIOS: Funcionario[] = [
+  {
+    id_funcionario: 1,
+    nome: "Dr. João",
+    cargo: "Veterinário",
+    telefone: "(85) 99999-0001",
+    email: "joao@petshop.com",
+  },
+  {
+    id_funcionario: 2,
+    nome: "Dra. Ana",
+    cargo: "Veterinária",
+    telefone: "(85) 99999-0002",
+    email: "ana@petshop.com",
+  },
+];
+
+const MOCK_CONSULTAS: Consultas[] = [
+  {
+    id_consulta: 1,
+    id_animal: 1,
+    id_funcionario: 1,
+    data_hora: new Date().toISOString(),
+    diagnostico: "Check-up de rotina",
+    status_consulta: "Agendada",
+    preco: 150,
+    nomeAnimal: "Rex",
+    nomeFuncionario: "Dr. João",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id_consulta: 2,
+    id_animal: 2,
+    id_funcionario: 2,
+    data_hora: new Date().toISOString(),
+    diagnostico: "Vacinação anual",
+    status_consulta: "Agendada",
+    preco: 200,
+    nomeAnimal: "Mimi",
+    nomeFuncionario: "Dra. Ana",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
+
 interface ConsultaForm {
   id_consulta: number;
   id_animal: number;
@@ -284,9 +358,13 @@ export default function Consultas() {
       console.log('Consultas processadas:', consultasEnriquecidas); // Debug
       setConsultas(consultasEnriquecidas);
     } catch (err: any) {
-      const errorMessage = err.message || "Ocorreu um erro ao carregar os dados do dashboard.";
-      setError(errorMessage);
       console.error("Erro ao buscar dados para o dashboard:", err);
+      // Backend indisponível: usar dados mockados
+      console.warn("Backend indisponível. Usando dados mockados para consultas.");
+      setAnimais(MOCK_ANIMAIS);
+      setFuncionarios(MOCK_FUNCIONARIOS);
+      setConsultas(MOCK_CONSULTAS);
+      setError(null);
     } finally {
       setLoading(false);
     }

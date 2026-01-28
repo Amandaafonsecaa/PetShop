@@ -11,6 +11,7 @@
     transition: all 0.3s ease;
     width: 150px;
     height: 150px;
+    color: #1e293b;
 }
 
 .btn-crud:hover:not(.disabled) {
@@ -26,12 +27,14 @@
 
 .btn-crud-text {
     text-align: center;
+    color: #1e293b;
 }
 
 .btn-crud-text h3 {
     margin: 0;
     font-size: 1rem;
     color: #1e293b;
+    font-weight: 600;
 }
 
 .btn-crud-text p {

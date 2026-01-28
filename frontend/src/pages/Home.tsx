@@ -18,6 +18,126 @@ import iconeFuncionarios from "../assets/icons/funcionarios.png";
 import iconePendente from "../assets/icons/pendente.png";
 import ConsultasHoje from "../components/Home/ConsultasHoje";
 
+// Dados mockados para o dashboard quando o backend estiver indisponível
+const MOCK_ANIMAIS_DASHBOARD: Animal[] = [
+  {
+    id_animal: 1,
+    nome: "Rex",
+    especie: "Cão",
+    raca: "Vira-lata",
+    peso: 12,
+    sexo: "Macho",
+    data_nascimento: new Date(),
+    id_tutor: 1,
+    observacoes_medicas: "Vacinado e saudável",
+    status_animal: "Ativo",
+  },
+  {
+    id_animal: 2,
+    nome: "Mimi",
+    especie: "Gato",
+    raca: "Siamês",
+    peso: 4,
+    sexo: "Fêmea",
+    data_nascimento: new Date(),
+    id_tutor: 2,
+    observacoes_medicas: "Alergia a ração X",
+    status_animal: "Ativo",
+  },
+  {
+    id_animal: 3,
+    nome: "Thor",
+    especie: "Cão",
+    raca: "Labrador",
+    peso: 25,
+    sexo: "Macho",
+    data_nascimento: new Date(),
+    id_tutor: 1,
+    observacoes_medicas: null,
+    status_animal: "Ativo",
+  },
+];
+
+const MOCK_TUTORES_DASHBOARD: Tutor[] = [
+  {
+    id_tutor: 1,
+    nome: "Carlos Silva",
+    telefone: "(85) 98888-0001",
+    email: "carlos@exemplo.com",
+  },
+  {
+    id_tutor: 2,
+    nome: "Mariana Souza",
+    telefone: "(85) 97777-0002",
+    email: "mariana@exemplo.com",
+  },
+];
+
+const MOCK_FUNCIONARIOS_DASHBOARD: Funcionario[] = [
+  {
+    id_funcionario: 1,
+    nome: "Dr. João",
+    cargo: "Veterinário",
+    telefone: "(85) 99999-0001",
+    email: "joao@petshop.com",
+  },
+  {
+    id_funcionario: 2,
+    nome: "Dra. Ana",
+    cargo: "Veterinária",
+    telefone: "(85) 99999-0002",
+    email: "ana@petshop.com",
+  },
+];
+
+const MOCK_PAGAMENTOS_DASHBOARD: Pagamento[] = [
+  {
+    id_pagamento: 1,
+    id_consulta: 1,
+    valor: 150,
+    data_pagamento: new Date(),
+    metodo: "Pix",
+    status_pagamento: "Pendente",
+  },
+  {
+    id_pagamento: 2,
+    id_consulta: 2,
+    valor: 200,
+    data_pagamento: new Date(),
+    metodo: "Cartão de Crédito",
+    status_pagamento: "Pago",
+  },
+];
+
+const MOCK_CONSULTAS_DASHBOARD: Consultas[] = [
+  {
+    id_consulta: 1,
+    id_animal: 1,
+    id_funcionario: 1,
+    data_hora: new Date().toISOString(),
+    diagnostico: "Check-up de rotina",
+    status_consulta: "Agendada",
+    preco: 150,
+    nomeAnimal: "Rex",
+    nomeFuncionario: "Dr. João",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id_consulta: 2,
+    id_animal: 2,
+    id_funcionario: 2,
+    data_hora: new Date().toISOString(),
+    diagnostico: "Vacinação anual",
+    status_consulta: "Agendada",
+    preco: 200,
+    nomeAnimal: "Mimi",
+    nomeFuncionario: "Dra. Ana",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
+
 export default function Home() {
   //definindo variasveis de estado
   const [consultas, setConsultas] = useState<Consultas[]>([]);
@@ -143,10 +263,21 @@ export default function Home() {
 
         setConsultas(consultasEnriquecidas);
       } catch (err: any) {
-        const errorMessage =
-          err.message || "Ocorreu um erro ao carregar os dados do dashboard.";
-        setError(errorMessage);
         console.error("Erro ao buscar dados para o dashboard:", err);
+        // Backend indisponível: usar dados mockados
+        console.warn("Backend indisponível. Usando dados mockados no dashboard.");
+
+        setTotalAnimais(MOCK_ANIMAIS_DASHBOARD.length);
+        setTotalTutores(MOCK_TUTORES_DASHBOARD.length);
+        setTotalFuncionarios(MOCK_FUNCIONARIOS_DASHBOARD.length);
+
+        const pagamentosPendentesArray = MOCK_PAGAMENTOS_DASHBOARD.filter(
+          (p) => p.status_pagamento.toLowerCase() === "pendente"
+        );
+        setContagemPagamentosPendentes(pagamentosPendentesArray.length);
+
+        setConsultas(MOCK_CONSULTAS_DASHBOARD);
+        setError(null);
       } finally {
         setLoading(false);
       }

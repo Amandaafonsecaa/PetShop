@@ -18,6 +18,55 @@ import lupaIcon from "../assets/icons/lupa.png";
 import "./Animais.css";
 import type { Animal, Tutor } from "../types/interfaces";
 
+// Dados mockados para quando o backend estiver indisponível
+const MOCK_TUTORES: Tutor[] = [
+  {
+    id_tutor: 1,
+    nome: "Carlos Silva",
+    telefone: "(85) 98888-0001",
+    email: "carlos@exemplo.com",
+  },
+  {
+    id_tutor: 2,
+    nome: "Mariana Souza",
+    telefone: "(85) 97777-0002",
+    email: "mariana@exemplo.com",
+  },
+];
+
+const MOCK_ANIMAIS: Animal[] = [
+  {
+    id_animal: 1,
+    nome: "Rex",
+    especie: "Cão",
+    raca: "Vira-lata",
+    peso: 12,
+    sexo: "Macho",
+    data_nascimento: new Date(),
+    id_tutor: 1,
+    observacoes_medicas: "Vacinado e saudável",
+    status_animal: "Ativo",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    nomeTutor: "Carlos Silva",
+  },
+  {
+    id_animal: 2,
+    nome: "Mimi",
+    especie: "Gato",
+    raca: "Siamês",
+    peso: 4,
+    sexo: "Fêmea",
+    data_nascimento: new Date(),
+    id_tutor: 2,
+    observacoes_medicas: "Alergia a ração X",
+    status_animal: "Ativo",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    nomeTutor: "Mariana Souza",
+  },
+];
+
 interface AnimalForm {
   nome: string;
   id_tutor: number;
@@ -106,13 +155,18 @@ export default function Animais() {
         status_animal: animalBruto.status_animal || 'Ativo',
         id_tutor: Number(animalBruto.id_tutor),
         createdAt: animalBruto.createdAt ? new Date(animalBruto.createdAt) : undefined,
-        updatedAt: animalBruto.updatedAt ? new Date(animalBruto.updatedAt) : undefined
+        updatedAt: animalBruto.updatedAt ? new Date(animalBruto.updatedAt) : undefined,
+        nomeTutor: mapaTutores.get(Number(animalBruto.id_tutor)) || "Tutor não informado",
       }));
 
       setListaCompletaAnimais(animaisEnriquecidos);
     } catch (err: any) {
-      setError(err.message || "Ocorreu um erro ao carregar os dados.");
       console.error("Erro ao buscar dados iniciais:", err);
+      // Backend indisponível: usar dados mockados
+      console.warn("Backend indisponível. Usando dados mockados para animais e tutores.");
+      setTutores(MOCK_TUTORES);
+      setListaCompletaAnimais(MOCK_ANIMAIS);
+      setError(null);
     } finally {
       setLoading(false);
     }
@@ -182,8 +236,8 @@ export default function Animais() {
 
   const handleAdicionarAnimal = async () => {
     if (!validateForm()) {
-      return;
-    }
+        return;
+      }
 
     try {
       const response = await fetch("http://localhost:3001/api/animais", {
@@ -207,20 +261,20 @@ export default function Animais() {
       if (response.ok) {
         const novoAnimal = await response.json();
         setListaCompletaAnimais([...listaCompletaAnimais, novoAnimal]);
-        setModalAdicionar(false);
-        setFormData({
+      setModalAdicionar(false);
+      setFormData({
           nome: "",
           id_tutor: 0,
-          raca: "",
-          peso: 0,
-          observacoes_medicas: "",
-          especie: "",
-          sexo: "",
-          data_nascimento: "",
-          status_animal: "Ativo"
-        });
+        raca: "",
+        peso: 0,
+        observacoes_medicas: "",
+        especie: "",
+        sexo: "",
+        data_nascimento: "",
+        status_animal: "Ativo"
+      });
         setFormErrors({});
-        alert('Animal adicionado com sucesso!');
+      alert('Animal adicionado com sucesso!');
       } else {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Erro ao adicionar animal');
@@ -252,8 +306,8 @@ export default function Animais() {
         setListaCompletaAnimais(listaCompletaAnimais.map(animal => 
           animal.id_animal === animalSelecionado.id_animal ? animalAtualizado : animal
         ));
-        setModalEditar(false);
-        setAnimalSelecionado(null);
+      setModalEditar(false);
+      setAnimalSelecionado(null);
         setFormData({
           nome: "",
           id_tutor: 0,
@@ -266,7 +320,7 @@ export default function Animais() {
           status_animal: "Ativo"
         });
         setFormErrors({});
-        alert('Animal atualizado com sucesso!');
+      alert('Animal atualizado com sucesso!');
       } else {
         throw new Error('Erro ao atualizar animal');
       }

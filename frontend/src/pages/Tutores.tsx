@@ -18,6 +18,28 @@ import lupaIcon from "../assets/icons/lupa.png";
 import "./Tutores.css";
 import type { Tutor } from "../types/interfaces";
 
+// Dados mockados para quando o backend estiver indisponível
+const MOCK_TUTORES: Tutor[] = [
+  {
+    id_tutor: 1,
+    nome: "Carlos Silva",
+    telefone: "(85) 98888-0001",
+    email: "carlos@exemplo.com",
+  },
+  {
+    id_tutor: 2,
+    nome: "Mariana Souza",
+    telefone: "(85) 97777-0002",
+    email: "mariana@exemplo.com",
+  },
+  {
+    id_tutor: 3,
+    nome: "Pedro Oliveira",
+    telefone: "(85) 96666-0003",
+    email: "pedro@exemplo.com",
+  },
+];
+
 interface TutorForm {
   nome: string;
   telefone: string;
@@ -64,8 +86,11 @@ export default function Tutores() {
       const tutoresData = await response.json();
       setListaCompletaTutores(tutoresData);
     } catch (err: any) {
-      setError(err.message || "Ocorreu um erro ao carregar os dados.");
       console.error("Erro ao buscar dados iniciais:", err);
+      // Backend indisponível: usar dados mockados
+      console.warn("Backend indisponível. Usando dados mockados para tutores.");
+      setListaCompletaTutores(MOCK_TUTORES);
+      setError(null);
     } finally {
       setLoading(false);
     }
@@ -567,6 +592,6 @@ export default function Tutores() {
           </button>
         </div>
       </Modal>
-    </div>
-  );
+        </div>
+    );
 }

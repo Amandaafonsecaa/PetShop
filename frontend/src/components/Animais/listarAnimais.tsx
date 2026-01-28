@@ -3,18 +3,11 @@ import type { Animal, Tutor } from '../../types/interfaces';
 import "./listarAnimais.css";
 
 const ListarAnimaisCard: React.FC<Animal> = ({
-  id_animal,
   nome,
   especie,
   raca,
-  peso,
-  sexo,
-  data_nascimento,
   id_tutor,
-  observacoes_medicas,
   status_animal,
-  createdAt,
-  updatedAt
 }) => {
   const [nomeTutor, setNomeTutor] = useState<string>('Carregando...');
 
@@ -37,34 +30,30 @@ const ListarAnimaisCard: React.FC<Animal> = ({
     fetchTutor();
   }, [id_tutor]);
 
-  const formatarData = (data: Date | undefined) => {
-    if (!data) return 'N/A';
-    return new Date(data).toLocaleDateString('pt-BR');
+  const getStatusColor = () => {
+    switch (status_animal.toLowerCase()) {
+      case 'ativo':
+        return 'status-ativo';
+      case 'inativo':
+        return 'status-inativo';
+      default:
+        return '';
+    }
   };
 
   return (
     <div className="animal-card-content">
-      <div className="animal-info">
-        <div className="animal-header">
-          <h3>{nome}</h3>
-          <span 
-            className={`status-badge ${status_animal.toLowerCase()}`}
-          >
-            {status_animal}
-          </span>
+      <div className="animal-header">
+        <div className="animal-info">
+          <h3 className="animal-nome">{nome}</h3>
+          <span className="animal-raca">{especie} • {raca}</span>
         </div>
-        <p><strong>ID:</strong> {id_animal}</p>
-        <p><strong>Tutor:</strong> {nomeTutor}</p>
-        <p><strong>Espécie:</strong> {especie || 'N/A'}</p>
-        <p><strong>Raça:</strong> {raca}</p>
-        <p><strong>Peso:</strong> {peso} kg</p>
-        <p><strong>Sexo:</strong> {sexo || 'N/A'}</p>
-        <p><strong>Data de Nascimento:</strong> {formatarData(data_nascimento)}</p>
-        {observacoes_medicas && (
-          <p><strong>Observações Médicas:</strong> {observacoes_medicas}</p>
-        )}
-        <p><strong>Criado em:</strong> {formatarData(createdAt)}</p>
-        <p><strong>Atualizado em:</strong> {formatarData(updatedAt)}</p>
+        <span className={`status-badge ${getStatusColor()}`}>
+          {status_animal}
+        </span>
+      </div>
+      <div className="animal-tutor">
+        <span className="tutor-nome">{nomeTutor}</span>
       </div>
     </div>
   );
