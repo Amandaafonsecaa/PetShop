@@ -1,0 +1,50 @@
+import { DataTypes, HasManyAddAssociationMixin, HasManyGetAssociationsMixin, Model, Optional } from "sequelize";
+import sequelize from "../config/database";
+
+export interface TutorAttributes {
+    id_tutor: number;
+    nome: string;
+    telefone: string;
+    email: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+export interface TutorCreationAttributes
+    extends Optional<TutorAttributes, 'id_tutor' | 'createdAt' | 'updatedAt'> {}
+    
+export interface TutorInstance extends Model<TutorAttributes, TutorCreationAttributes>, TutorAttributes {
+    getAnimais: HasManyGetAssociationsMixin<TutorInstance>;
+
+}
+
+
+const Tutor = sequelize.define(
+    'Tutor',
+    {
+        id_tutor: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,    
+        },
+        nome: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+        },
+        telefone: {
+            type: DataTypes.STRING(20),
+            allowNull: false,
+        },
+        email: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+            unique: true,
+        },
+
+},{
+    tableName: 'Tutor',
+    timestamps: true,
+    underscored: true, 
+}
+);
+export default Tutor;
